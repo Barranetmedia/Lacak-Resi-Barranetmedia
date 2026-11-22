@@ -1,889 +1,1315 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>larba. — Pelacakan & Cek Resi SPX</title>
-<link rel="icon" type="image/png" href="favicon.png">
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-<style>
-  :root{
-    /* Palet Warna Lotus */
-    --ink: #241922;
-    --ink-muted: #6e5968;
-    --paper: #fdf8fa;
-    --surface: #ffffff;
-    --surface-tint: #faf2f6;
-    --line: #eedce5;
-    
-    --lotus-deep: #5c2444;
-    --lotus-primary: #a8386b;
-    --lotus-petal: #d96b98;
-    --lotus-soft: #fae8f0;
-    --lotus-glow: rgba(168, 56, 107, 0.16);
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>larba. — Pelacakan &amp; Cek Resi SPX</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
 
-    --green: #15803d;
-    --green-soft: #e8f7ee;
-    --green-text: #146c35;
-    --yellow: #d99b00;
-    --yellow-soft: #fef6dc;
-    --yellow-text: #855c00;
-    --red: #be123c;
-    --red-soft: #fde8ee;
-    --red-text: #881337;
-    --wa: #1fa855;
-    --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-  }
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-  *{box-sizing:border-box;}
-  body{
-    margin:0;
-    background:var(--paper);
-    color:var(--ink);
-    font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
-    padding:0 0 80px;
-    -webkit-font-smoothing:antialiased;
-  }
-  .wrap{max-width:760px;margin:0 auto;padding:18px 16px 0;}
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  /* Header Tema Lotus */
-  header{
-    margin:0 0 8px;
-    border-radius:0 0 20px 20px;
-    overflow:hidden;
-    background:
-      radial-gradient(circle at 85% 15%, rgba(235, 134, 175, 0.35) 0%, transparent 45%),
-      radial-gradient(circle at 15% 85%, rgba(168, 56, 107, 0.45) 0%, transparent 50%),
-      linear-gradient(135deg, #3a152b 0%, #6d284f 52%, #a8386b 100%);
-    padding:18px 20px 20px;
-    text-align:center;
-    box-shadow:0 10px 28px rgba(92, 36, 68, 0.18);
-  }
-  .eyebrow{
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    font-family:var(--mono);
-    font-size:10px;
-    letter-spacing:0.09em;
-    text-transform:uppercase;
-    color:#fce7f1;
-    background:rgba(255, 255, 255, 0.14);
-    border:1px solid rgba(255, 255, 255, 0.18);
-    font-weight:600;
-    padding:4px 11px;
-    border-radius:999px;
-    margin-bottom:8px;
-  }
-  h1{
-    font-size:22px;
-    margin:0 0 3px;
-    font-weight:700;
-    letter-spacing:-0.02em;
-    color:#ffffff;
-  }
-  p.sub{
-    color:rgba(252, 231, 241, 0.85);
-    margin:0;
-    font-size:12.5px;
-  }
-
-  @media (min-width:820px){
-    .wrap{max-width:960px;}
-    header{padding:24px 40px 26px;}
-    h1{font-size:26px;}
-    p.sub{font-size:13.5px;}
-  }
-
-  .panel{
-    background:var(--surface);
-    border:1px solid var(--line);
-    border-radius:14px;
-    padding:20px;
-    margin-bottom:18px;
-    box-shadow:0 4px 20px rgba(92, 36, 68, 0.04);
-  }
-  label{font-size:13px;font-weight:600;display:block;margin-bottom:8px;color:var(--lotus-deep);}
-  textarea{
-    width:100%;
-    min-height:88px;
-    border:1px solid var(--line);
-    border-radius:10px;
-    padding:12px;
-    font-family:var(--mono);
-    font-size:13px;
-    resize:vertical;
-    background:var(--surface-tint);
-    color:var(--ink);
-  }
-  textarea:focus{outline:2px solid var(--lotus-primary);outline-offset:1px;background:#fff;}
-  .hint{font-size:12px;color:var(--ink-muted);margin-top:6px;}
-
-  .filter-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
-  .filter-field{flex:1 1 140px;min-width:140px;}
-  .filter-field label{font-size:11.5px;font-weight:600;margin-bottom:4px;}
-  .filter-field input,
-  .filter-field select{
-    width:100%;
-    border:1px solid var(--line);
-    border-radius:9px;
-    padding:9px 10px;
-    font-size:13px;
-    background:var(--surface-tint);
-    color:var(--ink);
-    font-family:inherit;
-  }
-  .filter-field input:focus,
-  .filter-field select:focus{outline:2px solid var(--lotus-primary);outline-offset:1px;background:#fff;}
-
-  .row{display:flex;gap:10px;align-items:center;margin-top:15px;flex-wrap:wrap;}
-  button{
-    background:linear-gradient(135deg, var(--lotus-primary) 0%, #8e2b58 100%);
-    color:#fff;
-    border:none;
-    padding:10px 20px;
-    border-radius:9px;
-    font-weight:600;
-    font-size:13.5px;
-    cursor:pointer;
-    transition:all .15s ease;
-  }
-  button:hover{filter:brightness(1.06);box-shadow:0 4px 12px var(--lotus-glow);}
-  button:disabled{background:#d8c4ce;cursor:not-allowed;box-shadow:none;}
-  button.ghost{
-    background:var(--surface);
-    color:var(--lotus-deep);
-    border:1px solid var(--line);
-  }
-  button.ghost:hover{background:var(--lotus-soft);border-color:var(--lotus-petal);}
-
-  .status-line{font-size:13px;color:var(--ink-muted);}
-
-  .summary{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
-  .chip{
-    font-family:var(--mono);
-    font-size:12px;
-    padding:6px 12px;
-    border-radius:999px;
-    border:1px solid var(--line);
-    background:var(--surface);
-  }
-  .chip.found{color:var(--lotus-primary);border-color:var(--lotus-petal);background:var(--lotus-soft);font-weight:600;}
-  .chip.missing{color:var(--red-text);border-color:var(--red);background:var(--red-soft);}
-
-  .missing-list{
-    font-family:var(--mono);
-    font-size:12px;
-    color:var(--red-text);
-    background:var(--red-soft);
-    border-radius:9px;
-    padding:10px 14px;
-    margin-bottom:16px;
-  }
-
-  .cards{display:grid;grid-template-columns:1fr;gap:10px;}
-  @media (min-width:820px){
-    .cards{grid-template-columns:1fr 1fr;}
-  }
-  .card{
-    background:var(--surface);
-    border:1px solid var(--line);
-    border-left:3.5px solid var(--lotus-primary);
-    border-radius:13px;
-    padding:13px 15px;
-    min-width:0;
-    transition:border-color .15s ease, box-shadow .15s ease;
-  }
-  .card:hover{box-shadow:0 6px 18px rgba(92, 36, 68, 0.06);}
-  .card.status-delivered{border-left-color:var(--green);}
-  .card.status-ongoing{border-left-color:var(--yellow);}
-  .card.status-retur{border-left-color:var(--red);}
-
-  .card-head{display:flex;justify-content:space-between;align-items:center;}
-  .resi-code{font-family:var(--mono);font-weight:700;font-size:14px;color:var(--lotus-deep);}
-  .status-badge{
-    font-size:10px;
-    font-weight:800;
-    text-transform:uppercase;
-    padding:3px 9px;
-    border-radius:999px;
-    white-space:nowrap;
-  }
-  .status-delivered .status-badge{background:var(--green-soft);color:var(--green-text);}
-  .status-ongoing .status-badge{background:var(--yellow-soft);color:var(--yellow-text);}
-  .status-retur .status-badge{background:var(--red-soft);color:var(--red-text);}
-  .status-other .status-badge{background:var(--lotus-soft);color:var(--lotus-deep);}
-
-  .card-subhead{display:flex;justify-content:space-between;align-items:center;margin-top:3px;}
-  .card-date{font-size:11px;color:var(--ink-muted);}
-  .card-price{font-size:12px;font-weight:700;color:var(--ink);}
-
-  .card-namehp{font-size:12.5px;font-weight:600;margin-top:9px;color:var(--ink);}
-  .card-namehp .sep{color:var(--lotus-petal);}
-
-  .card-line{
-    font-size:11.5px;
-    color:var(--ink-muted);
-    margin-top:3px;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  .card-line.open{white-space:normal;overflow:visible;line-height:1.45;}
-
-  .card-actions{
-    display:flex;
-    gap:7px;
-    margin-top:11px;
-  }
-  .btn-action{
-    flex:1;
-    text-align:center;
-    font-size:11.5px;
-    font-weight:700;
-    padding:8px 0;
-    border-radius:9px;
-    text-decoration:none;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:5px;
-    cursor:pointer;
-  }
-  .btn-resi{
-    border:1px solid var(--lotus-petal);
-    color:var(--lotus-primary);
-    background:var(--lotus-soft);
-  }
-  .btn-resi:hover{
-    background:var(--lotus-primary);
-    color:#fff;
-  }
-  .btn-wa{background:var(--wa);color:#fff;border:none;}
-  .btn-wa:hover{background:#199148;}
-  .btn-toggle{
-    flex:0 0 34px;
-    border:1px solid var(--line);
-    background:var(--surface);
-    color:var(--ink-muted);
-    border-radius:9px;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:0;
-  }
-  .btn-toggle:hover{background:var(--lotus-soft);color:var(--lotus-deep);}
-  .btn-toggle svg{width:14px;height:14px;transition:transform .15s ease;}
-  .btn-toggle.open svg{transform:rotate(180deg);}
-
-  .empty{text-align:center;padding:40px 20px;color:var(--ink-muted);font-size:14px;}
-
-  /* MODAL IN-APP LIVE TRACKING (LOTUS DARK-PLUM & PETAL) */
-  .modal-backdrop{
-    position:fixed;
-    inset:0;
-    background:rgba(28, 12, 22, 0.68);
-    backdrop-filter:blur(6px);
-    -webkit-backdrop-filter:blur(6px);
-    display:none;
-    justify-content:center;
-    align-items:flex-end;
-    z-index:999;
-    padding:16px;
-  }
-  @media (min-width:600px){
-    .modal-backdrop{align-items:center;}
-  }
-  .modal-backdrop.active{display:flex;}
-
-  .modal-box{
-    width:100%;
-    max-width:500px;
-    max-height:86vh;
-    background:#191016;
-    color:#f9eef3;
-    border:1px solid rgba(235, 134, 175, 0.22);
-    border-radius:20px;
-    display:flex;
-    flex-direction:column;
-    overflow:hidden;
-    box-shadow:0 24px 50px rgba(0, 0, 0, 0.55);
-    animation:modalPop .2s ease-out;
-  }
-  @keyframes modalPop{
-    from{opacity:0;transform:translateY(14px) scale(0.98);}
-    to{opacity:1;transform:translateY(0) scale(1);}
-  }
-
-  .modal-header{
-    padding:18px 20px;
-    background:linear-gradient(135deg, #2d1423 0%, #461b34 100%);
-    border-bottom:1px solid rgba(235, 134, 175, 0.16);
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-  }
-  .modal-courier{
-    font-size:10.5px;
-    text-transform:uppercase;
-    letter-spacing:0.09em;
-    color:#f29bc0;
-    font-weight:700;
-    margin-bottom:3px;
-  }
-  .modal-resi{
-    font-family:var(--mono);
-    font-size:16px;
-    font-weight:700;
-    color:#fff;
-    display:flex;
-    align-items:center;
-    gap:8px;
-  }
-  .modal-close{
-    background:rgba(255,255,255,0.08);
-    border:1px solid rgba(255,255,255,0.12);
-    color:#f9eef3;
-    width:32px;
-    height:32px;
-    border-radius:999px;
-    padding:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:16px;
-  }
-  .modal-close:hover{background:rgba(235, 134, 175, 0.25);}
-
-  .modal-body{
-    padding:20px;
-    overflow-y:auto;
-    flex:1;
-  }
-
-  .track-status-row{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:16px;
-  }
-  .track-pill{
-    background:rgba(235, 134, 175, 0.16);
-    color:#f7a8ca;
-    border:1px solid rgba(235, 134, 175, 0.3);
-    padding:5px 12px;
-    border-radius:999px;
-    font-size:12px;
-    font-weight:700;
-  }
-  .track-pill.delivered{
-    background:rgba(16, 185, 129, 0.15);
-    color:#34d399;
-    border-color:rgba(16, 185, 129, 0.3);
-  }
-  .ext-link{
-    font-size:11.5px;
-    color:#d8b4c6;
-    text-decoration:none;
-    border-bottom:1px dashed rgba(216, 180, 198, 0.4);
-  }
-  .ext-link:hover{color:#fff;}
-
-  /* 4-Step Milestone Bar */
-  .milestones{
-    display:grid;
-    grid-template-columns:repeat(4, 1fr);
-    gap:6px;
-    margin-bottom:22px;
-    text-align:center;
-  }
-  .m-step span{
-    display:block;
-    font-size:10.5px;
-    color:#8c6d7e;
-    margin-top:5px;
-  }
-  .m-bar{
-    height:4px;
-    border-radius:4px;
-    background:rgba(255,255,255,0.08);
-  }
-  .m-step.active .m-bar{
-    background:linear-gradient(90deg, #d96b98, #f29bc0);
-  }
-  .m-step.active.done .m-bar{
-    background:#10b981;
-  }
-  .m-step.active span{
-    color:#f9eef3;
-    font-weight:600;
-  }
-
-  /* Timeline */
-  .timeline{
-    position:relative;
-    padding-left:20px;
-  }
-  .timeline::before{
-    content:"";
-    position:absolute;
-    left:4px;
-    top:6px;
-    bottom:8px;
-    width:1.5px;
-    background:rgba(235, 134, 175, 0.2);
-  }
-  .t-item{
-    position:relative;
-    padding-bottom:18px;
-  }
-  .t-item:last-child{padding-bottom:0;}
-  .t-dot{
-    position:absolute;
-    left:-20px;
-    top:4px;
-    width:10px;
-    height:10px;
-    border-radius:50%;
-    background:#191016;
-    border:2px solid #7c5c6e;
-  }
-  .t-item:first-child .t-dot{
-    background:#f29bc0;
-    border-color:#f29bc0;
-    box-shadow:0 0 0 4px rgba(242, 155, 192, 0.2);
-  }
-  .t-item:first-child.delivered .t-dot{
-    background:#10b981;
-    border-color:#10b981;
-    box-shadow:0 0 0 4px rgba(16, 185, 129, 0.2);
-  }
-  .t-time{
-    font-size:11.5px;
-    color:#9c7c8e;
-    margin-bottom:2px;
-  }
-  .t-item:first-child .t-time{
-    color:#f7a8ca;
-    font-weight:600;
-  }
-  .t-item:first-child.delivered .t-time{
-    color:#34d399;
-  }
-  .t-desc{
-    font-size:13px;
-    line-height:1.45;
-    color:#d8c3ce;
-  }
-  .t-item:first-child .t-desc{
-    color:#ffffff;
-    font-weight:600;
-  }
-  .t-loc{
-    display:inline-block;
-    margin-top:4px;
-    font-size:11px;
-    color:#d8b4c6;
-    background:rgba(235, 134, 175, 0.1);
-    padding:2px 8px;
-    border-radius:5px;
-  }
-
-  .loader-box{
-    text-align:center;
-    padding:36px 16px;
-    color:#d8b4c6;
-    font-size:13px;
-  }
-  .spinner{
-    width:26px;
-    height:26px;
-    border:2.5px solid rgba(242, 155, 192, 0.2);
-    border-top-color:#f29bc0;
-    border-radius:50%;
-    margin:0 auto 12px;
-    animation:spin .75s linear infinite;
-  }
-  @keyframes spin{to{transform:rotate(360deg);}}
-</style>
-</head>
-<body>
-<header>
-  <div class="eyebrow">Rahasia perusahaan</div>
-  <h1>larba.</h1>
-  <p class="sub">Pelacakan &amp; Cek Resi SPX Barranetmedia</p>
-</header>
-
-<div class="wrap">
-  <div class="panel" id="loginPanel">
-    <label>Login dengan akun Google yang sudah diizinkan</label>
-    <div id="googleSignInBtn" style="margin-top:8px;"></div>
-    <div class="status-line" id="loginStatus" style="margin-top:10px;"></div>
-  </div>
-
-  <div class="panel" id="searchPanel" style="display:none;">
-    <label for="queryInput">Cari berdasarkan resi, nama, atau no HP</label>
-    <textarea id="queryInput" placeholder="Widodo&#10;81317081945&#10;SPXID06358221"></textarea>
-    <div class="hint">Bisa cari banyak sekaligus, satu per baris atau dipisah koma. Boleh dicampur (resi + nama + HP).</div>
-
-    <div class="filter-row">
-      <div class="filter-field">
-        <label for="csInput">CS</label>
-        <input type="text" id="csInput" placeholder="Nama CS (opsional)">
-      </div>
-      <div class="filter-field">
-        <label for="statusInput">Status</label>
-        <select id="statusInput">
-          <option value="">Semua status</option>
-          <option value="ongoing">On going</option>
-          <option value="delivered">Delivered</option>
-          <option value="retur">Retur</option>
-        </select>
-      </div>
-      <div class="filter-field">
-        <label for="dateFromInput">Dari tanggal</label>
-        <input type="date" id="dateFromInput">
-      </div>
-      <div class="filter-field">
-        <label for="dateToInput">Sampai tanggal</label>
-        <input type="date" id="dateToInput">
-      </div>
-    </div>
-    <div class="hint">Kolom CS dan tanggal opsional — boleh dipakai sendiri tanpa isi kata kunci di atas.</div>
-
-    <div class="row">
-      <button id="searchBtn">Cari resi</button>
-      <button class="ghost" id="clearBtn">Bersihkan</button>
-      <button class="ghost" id="todayOngoingBtn" type="button">Semua yang ongoing</button>
-      <span class="status-line" id="statusLine"></span>
-    </div>
-  </div>
-
-  <div id="resultsArea"></div>
-</div>
-
-<!-- MODAL IN-APP TRACKING -->
-<div class="modal-backdrop" id="trackModal" onclick="closeTrackModal(event)">
-  <div class="modal-box" onclick="event.stopPropagation()">
-    <div class="modal-header">
-      <div>
-        <div class="modal-courier">SPX Express Live Tracking</div>
-        <div class="modal-resi" id="modalResiTitle">-</div>
-      </div>
-      <button class="modal-close" onclick="closeTrackModal()" aria-label="Tutup">&times;</button>
-    </div>
-    <div class="modal-body" id="modalBody"></div>
-  </div>
-</div>
-
-<script>
-  var API_URL = "https://script.google.com/macros/s/AKfycbyZo8dEMfDcS84-WDwZiZeZS-WzdAwLOAyr_lU1TAovOZdW7PV0Qh338mhNJRDOKua1oA/exec";
-  var GOOGLE_CLIENT_ID = "315770296664-pkethfkpdhd9bqj1lnjj0ec06eos8rlv.apps.googleusercontent.com";
-
-  var ID_TOKEN = null;
-  var expandedCards = {};
-  var lastData = null;
-  var trackingCache = {}; // Cache hasil lacak supaya klik ulang langsung instan
-
-  var queryInput = document.getElementById('queryInput');
-  var csInput = document.getElementById('csInput');
-  var statusInput = document.getElementById('statusInput');
-  var dateFromInput = document.getElementById('dateFromInput');
-  var dateToInput = document.getElementById('dateToInput');
-  var todayOngoingBtn = document.getElementById('todayOngoingBtn');
-  var searchBtn = document.getElementById('searchBtn');
-  var clearBtn = document.getElementById('clearBtn');
-  var statusLine = document.getElementById('statusLine');
-  var resultsArea = document.getElementById('resultsArea');
-  var loginPanel = document.getElementById('loginPanel');
-  var searchPanel = document.getElementById('searchPanel');
-  var loginStatus = document.getElementById('loginStatus');
-
-  window.onload = function () {
-    if (typeof google === 'undefined') return;
-    google.accounts.id.initialize({
-      client_id: GOOGLE_CLIENT_ID,
-      callback: handleGoogleSignIn,
-      auto_select: true
-    });
-    google.accounts.id.renderButton(
-      document.getElementById('googleSignInBtn'),
-      { theme: 'outline', size: 'large', text: 'signin_with' }
-    );
-    google.accounts.id.prompt();
-  };
-
-  function jsonpRequest(params, callback) {
-    var callbackName = 'jsonp_cb_' + Date.now() + '_' + Math.floor(Math.random() * 100000);
-    window[callbackName] = function (data) {
-      delete window[callbackName];
-      document.body.removeChild(script);
-      callback(null, data);
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+        },
+      },
     };
-    var query = Object.keys(params).map(function (k) {
-      return k + '=' + encodeURIComponent(params[k]);
-    }).join('&');
-    var script = document.createElement('script');
-    script.src = API_URL + '?' + query + '&callback=' + callbackName;
-    script.onerror = function () {
-      delete window[callbackName];
-      document.body.removeChild(script);
-      callback(new Error('Gagal memuat data dari server.'));
-    };
-    document.body.appendChild(script);
-  }
+  </script>
 
-  function handleGoogleSignIn(response) {
-    ID_TOKEN = response.credential;
-    loginStatus.textContent = 'Memeriksa akses...';
+  <!-- Early Theme Restoration -->
+  <script>
+    (function () {
+      try {
+        const savedTheme = localStorage.getItem('larba_theme_mode');
+        if (savedTheme === 'light') {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.classList.add('light');
+        }
+      } catch (e) {}
+    })();
+  </script>
 
-    jsonpRequest({ token: ID_TOKEN, q: '__cek_akses__' }, function (err, data) {
-      if (err) {
-        loginStatus.textContent = 'Gagal terhubung: ' + err.message;
-        return;
-      }
-      if (!data.success) {
-        loginStatus.textContent = data.error;
-        ID_TOKEN = null;
-        return;
-      }
-      loginPanel.style.display = 'none';
-      searchPanel.style.display = '';
-    });
-  }
+  <style>
+    /* ==========================================================================
+       TWILIGHT LOTUS DUAL THEME TOKENS (DARK & LIGHT)
+       ========================================================================== */
+    :root {
+      /* Mode Gelap (Twilight Lotus Dark) */
+      --bg-base: #0C0918;
+      --text-primary: #F7F5FC;
+      --text-secondary: #A9A0C4;
+      --text-muted: #746A94;
 
-  clearBtn.addEventListener('click', function () {
-    queryInput.value = '';
-    csInput.value = '';
-    statusInput.value = '';
-    dateFromInput.value = '';
-    dateToInput.value = '';
-    resultsArea.innerHTML = '';
-    statusLine.textContent = '';
-  });
+      --accent-primary: #8B96F2;
+      --accent-secondary: #B78EF5;
+      --accent-gold: #F6C856;
+      --accent-gold-ring: rgba(246, 200, 86, 0.34);
+      --accent-delivered: #6EE7B7;
+      --accent-retur: #FDA4AF;
 
-  searchBtn.addEventListener('click', searchResi);
-  todayOngoingBtn.addEventListener('click', function () {
-    queryInput.value = '';
-    csInput.value = '';
-    statusInput.value = 'ongoing';
-    dateFromInput.value = '';
-    dateToInput.value = '';
-    searchResi();
-  });
-  queryInput.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter' && e.ctrlKey) searchResi();
-  });
+      --cta-gradient: linear-gradient(135deg, #7884E8, #B78EF5);
+      --cta-text: #0C0918;
+      --cta-shadow: 0 8px 24px -6px rgba(155, 132, 242, 0.45);
+      --cta-shadow-hover: 0 10px 28px -4px rgba(183, 142, 245, 0.6);
 
-  function statusClass(status) {
-    var s = (status || '').toLowerCase();
-    if (s.indexOf('deliver') !== -1) return 'status-delivered';
-    if (s.indexOf('ongoing') !== -1 || s.indexOf('on going') !== -1 || s.indexOf('on-going') !== -1 || s.indexOf('proses') !== -1) return 'status-ongoing';
-    if (s.indexOf('retur') !== -1) return 'status-retur';
-    return 'status-other';
-  }
+      --route-gradient: linear-gradient(90deg, #7884E8 0%, #B78EF5 55%, #F6C856 100%);
+      --route-track: rgba(227, 186, 245, 0.14);
 
-  function buildWaMessage(item) {
-    return "Halo Kak " + item.nama + " \uD83D\uDC4B\n\n" +
-      "\uD83D\uDCE6 Nomor Resi Pesanan " + item.produk + ":\n" +
-      item.resi + "\n\n" +
-      "Mohon pastikan nomor resi pada paket sama dengan nomor di atas saat paket diterima.\n\n" +
-      "Cek posisi paket di sini:\n" +
-      item.linkResi + "\n\n" +
-      "Terima kasih \uD83D\uDE4F";
-  }
+      --hairline: rgba(227, 186, 245, 0.11);
+      --pill-bg: rgba(255, 255, 255, 0.045);
+      --pill-bg-hover: rgba(255, 255, 255, 0.085);
+      --pill-border: rgba(227, 186, 245, 0.14);
+      --badge-bg: rgba(120, 132, 232, 0.16);
 
-  function waLink(item) {
-    var phone = String(item.noHp).replace(/\D/g, '');
-    var normalized = phone.charAt(0) === '0' ? '62' + phone.slice(1) : (phone.indexOf('62') === 0 ? phone : '62' + phone);
-    return 'https://wa.me/' + normalized + '?text=' + encodeURIComponent(buildWaMessage(item));
-  }
+      --search-line: rgba(227, 186, 245, 0.18);
+      --search-focus: #B78EF5;
+      --search-focus-glow: rgba(183, 142, 245, 0.45);
 
-  function searchResi() {
-    var raw = queryInput.value.trim();
-    var cs = csInput.value.trim();
-    var status = statusInput.value;
-    var dateFrom = dateFromInput.value;
-    var dateTo = dateToInput.value;
+      --timeline-line: linear-gradient(180deg, rgba(246, 200, 86, 0.5) 0%, rgba(183, 142, 245, 0.32) 48%, rgba(120, 132, 232, 0.10) 100%);
+      --timeline-dot-past: #8B96F2;
 
-    if (!raw && !cs && !status && !dateFrom && !dateTo) {
-      statusLine.textContent = 'Masukkan minimal satu kata kunci, CS, status, atau periode tanggal.';
-      return;
+      --shimmer-base: rgba(227, 186, 245, 0.05);
+      --shimmer-highlight: rgba(183, 142, 245, 0.14);
+
+      --overlay-bg: rgba(6, 4, 13, 0.74);
+      --sheet-bg: linear-gradient(180deg, rgba(23, 18, 48, 0.96) 0%, rgba(12, 9, 24, 0.99) 100%);
+      --sheet-shadow: 0 -20px 60px rgba(6, 4, 13, 0.85);
+      --toast-bg: rgba(24, 18, 52, 0.95);
+      --toast-shadow: 0 12px 32px rgba(6, 4, 13, 0.72);
     }
 
-    searchBtn.disabled = true;
-    statusLine.textContent = 'Mencari...';
-    resultsArea.innerHTML = '';
+    html.light {
+      /* Mode Terang (Morning Lotus Light) */
+      --bg-base: #FAF8FD;
+      --text-primary: #141026;
+      --text-secondary: #595175;
+      --text-muted: #8B81A8;
 
-    jsonpRequest({ token: ID_TOKEN, q: raw, cs: cs, status: status, dateFrom: dateFrom, dateTo: dateTo }, function (err, data) {
-      searchBtn.disabled = false;
-      if (err) {
-        statusLine.textContent = 'Gagal terhubung ke server: ' + err.message;
-        return;
+      --accent-primary: #5663D1;
+      --accent-secondary: #8C63DF;
+      --accent-gold: #D98A1C;
+      --accent-gold-ring: rgba(217, 138, 28, 0.28);
+      --accent-delivered: #0D9488;
+      --accent-retur: #E11D48;
+
+      --cta-gradient: linear-gradient(135deg, #5663D1, #8C63DF);
+      --cta-text: #FFFFFF;
+      --cta-shadow: 0 8px 22px -6px rgba(86, 99, 209, 0.36);
+      --cta-shadow-hover: 0 10px 26px -4px rgba(140, 99, 223, 0.48);
+
+      --route-gradient: linear-gradient(90deg, #5663D1 0%, #936CE8 55%, #D98A1C 100%);
+      --route-track: rgba(20, 16, 38, 0.09);
+
+      --hairline: rgba(20, 16, 38, 0.08);
+      --pill-bg: rgba(20, 16, 38, 0.035);
+      --pill-bg-hover: rgba(20, 16, 38, 0.07);
+      --pill-border: rgba(20, 16, 38, 0.09);
+      --badge-bg: rgba(86, 99, 209, 0.11);
+
+      --search-line: rgba(20, 16, 38, 0.14);
+      --search-focus: #5663D1;
+      --search-focus-glow: rgba(86, 99, 209, 0.24);
+
+      --timeline-line: linear-gradient(180deg, rgba(217, 138, 28, 0.45) 0%, rgba(140, 99, 223, 0.28) 50%, rgba(86, 99, 209, 0.10) 100%);
+      --timeline-dot-past: #8C63DF;
+
+      --shimmer-base: rgba(20, 16, 38, 0.045);
+      --shimmer-highlight: rgba(86, 99, 209, 0.11);
+
+      --overlay-bg: rgba(20, 16, 38, 0.32);
+      --sheet-bg: linear-gradient(180deg, rgba(252, 250, 255, 0.96) 0%, rgba(243, 238, 249, 0.99) 100%);
+      --sheet-shadow: 0 -18px 50px rgba(20, 16, 38, 0.14);
+      --toast-bg: rgba(255, 255, 255, 0.96);
+      --toast-shadow: 0 12px 30px rgba(20, 16, 38, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100dvh;
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.35s ease, color 0.35s ease;
+    }
+
+    .theme-transition {
+      transition:
+        background-color 0.35s ease,
+        color 0.35s ease,
+        border-color 0.35s ease,
+        box-shadow 0.35s ease,
+        opacity 0.35s ease;
+    }
+
+    /* Dual Full-Viewport Atmospheric Canvases */
+    .atmosphere-dark {
+      background-color: #0C0918;
+      background-image:
+        radial-gradient(ellipse 64% 42% at 20% 10%, rgba(111, 124, 230, 0.22) 0%, rgba(111, 124, 230, 0) 76%),
+        radial-gradient(ellipse 56% 36% at 55% -4%, rgba(155, 132, 242, 0.16) 0%, rgba(155, 132, 242, 0) 74%),
+        radial-gradient(ellipse 48% 32% at 82% 8%, rgba(223, 183, 242, 0.11) 0%, rgba(223, 183, 242, 0) 72%),
+        radial-gradient(circle at 68% 12%, rgba(246, 200, 86, 0.08) 0%, rgba(246, 200, 86, 0) 44%),
+        linear-gradient(180deg, #15102B 0%, #0F0B21 40%, #0C0918 100%);
+      opacity: 1;
+      transition: opacity 0.35s ease;
+    }
+
+    html.light .atmosphere-dark {
+      opacity: 0;
+    }
+
+    .atmosphere-light {
+      background-color: #FAF8FD;
+      background-image:
+        radial-gradient(ellipse 64% 44% at 20% 8%, rgba(111, 124, 230, 0.11) 0%, rgba(111, 124, 230, 0) 76%),
+        radial-gradient(ellipse 54% 38% at 78% 6%, rgba(196, 152, 235, 0.15) 0%, rgba(196, 152, 235, 0) 74%),
+        radial-gradient(circle at 64% 12%, rgba(235, 174, 52, 0.09) 0%, rgba(235, 174, 52, 0) 46%),
+        linear-gradient(180deg, #F3EEF9 0%, #F7F4FC 42%, #FAF8FD 100%);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    html.light .atmosphere-light {
+      opacity: 1;
+    }
+
+    .editorial-heading {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+
+    .text-lotus-primary { color: var(--text-primary); }
+    .text-lotus-secondary { color: var(--text-secondary); }
+    .text-lotus-muted { color: var(--text-muted); }
+    .text-lotus-accent { color: var(--accent-primary); }
+    .text-lotus-gold { color: var(--accent-gold); }
+    .text-lotus-delivered { color: var(--accent-delivered); }
+    .text-lotus-retur { color: var(--accent-retur); }
+
+    .lotus-pill {
+      background-color: var(--pill-bg);
+      border: 1px solid var(--pill-border);
+      transition: background-color 0.25s ease, border-color 0.35s ease, color 0.35s ease;
+    }
+
+    .lotus-pill:hover {
+      background-color: var(--pill-bg-hover);
+    }
+
+    .lotus-divider {
+      border: 0;
+      border-top: 1px solid var(--hairline);
+      transition: border-color 0.35s ease;
+    }
+
+    .lotus-cta-btn {
+      background: var(--cta-gradient);
+      color: var(--cta-text);
+      box-shadow: var(--cta-shadow);
+      transition: transform 0.18s ease, box-shadow 0.25s ease, filter 0.25s ease, color 0.35s ease;
+    }
+
+    .lotus-cta-btn:hover:not(:disabled) {
+      filter: brightness(1.05);
+      box-shadow: var(--cta-shadow-hover);
+    }
+
+    .lotus-cta-btn:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+
+    .lotus-cta-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* Borderless Search Underline with Focus Illumination */
+    .search-underline {
+      border-bottom: 1px solid var(--search-line);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .search-underline:focus-within {
+      border-bottom-color: var(--search-focus);
+      box-shadow: 0 10px 26px -14px var(--search-focus-glow);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: var(--text-muted);
+      opacity: 0.85;
+    }
+
+    /* Custom date & select styling */
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(0.7);
+      cursor: pointer;
+    }
+    html.light input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: none;
+    }
+    select option {
+      background-color: #171230;
+      color: #F7F5FC;
+    }
+    html.light select option {
+      background-color: #FAF8FD;
+      color: #141026;
+    }
+
+    /* Radar Dot & Active Node Pulse Animation */
+    @keyframes goldRadarPulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 var(--accent-gold-ring);
       }
-      if (!data.success) {
-        statusLine.textContent = 'Terjadi kesalahan: ' + data.error;
-        return;
+      50% {
+        transform: scale(1.18);
+        box-shadow: 0 0 0 6px rgba(246, 200, 86, 0);
       }
-      statusLine.textContent = 'Ditemukan ' + data.total + ' hasil.';
-      renderResults(data);
+    }
+
+    .radar-pulse-dot {
+      background-color: var(--accent-gold);
+      animation: goldRadarPulse 2.6s ease-in-out infinite;
+      transition: background-color 0.35s ease;
+    }
+
+    /* Route Progress Track & Glowing Comet Dot */
+    .route-track-bg {
+      background-color: var(--route-track);
+      transition: background-color 0.35s ease;
+    }
+
+    .route-progress-beam {
+      background: var(--route-gradient);
+    }
+
+    .route-comet-dot {
+      background-color: var(--accent-gold);
+      box-shadow: 0 0 10px 2px var(--accent-gold-ring), 0 0 4px 1px var(--accent-gold);
+      transition: left 0.7s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    /* Vertical Timeline Line & Pulsing Halo Ring on Newest Checkpoint */
+    .timeline-vertical-line {
+      background: var(--timeline-line);
+    }
+
+    @keyframes checkpointHalo {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 4px var(--accent-gold-ring), 0 0 12px var(--accent-gold-ring);
+      }
+      50% {
+        transform: scale(1.14);
+        box-shadow: 0 0 0 8px rgba(246, 200, 86, 0), 0 0 16px var(--accent-gold-ring);
+      }
+    }
+
+    .timeline-active-node {
+      background-color: var(--accent-gold);
+      animation: checkpointHalo 2.5s ease-in-out infinite;
+      transition: background-color 0.35s ease;
+    }
+
+    .timeline-past-node {
+      background-color: var(--timeline-dot-past);
+      transition: background-color 0.35s ease;
+    }
+
+    /* Lightweight Shimmer State */
+    @keyframes lotusShimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .shimmer-bar {
+      background: linear-gradient(
+        90deg,
+        var(--shimmer-base) 25%,
+        var(--shimmer-highlight) 50%,
+        var(--shimmer-base) 75%
+      );
+      background-size: 200% 100%;
+      animation: lotusShimmer 1.1s ease-in-out infinite;
+    }
+
+    /* Slide-Up Frosted Bottom Sheet */
+    .drawer-overlay {
+      background-color: var(--overlay-bg);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.28s ease, background-color 0.35s ease;
+    }
+
+    .drawer-overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .drawer-sheet {
+      background: var(--sheet-bg);
+      border-top: 1px solid var(--pill-border);
+      box-shadow: var(--sheet-shadow);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      transform: translateY(100%);
+      transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s ease;
+    }
+
+    .drawer-overlay.is-open .drawer-sheet {
+      transform: translateY(0);
+    }
+
+    /* Floating Toast */
+    .lotus-toast {
+      background-color: var(--toast-bg);
+      border: 1px solid var(--pill-border);
+      box-shadow: var(--toast-shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+  </style>
+</head>
+<body class="relative min-h-[100dvh] selection:bg-[#8B96F2]/25">
+
+  <!-- Full-Viewport Dual Atmospheric Background Layers -->
+  <div class="atmosphere-dark fixed inset-0 pointer-events-none z-0" aria-hidden="true"></div>
+  <div class="atmosphere-light fixed inset-0 pointer-events-none z-0" aria-hidden="true"></div>
+
+  <!-- Centered Single-Column Cardless Editorial Container -->
+  <div class="relative z-10 w-full max-w-[620px] mx-auto px-6 pt-8 pb-24">
+
+    <!-- 1. Minimal Top Header -->
+    <header class="flex items-center justify-between gap-3 mb-11">
+      <!-- Brand Wordmark ('larba.') -->
+      <button
+        id="brandResetBtn"
+        type="button"
+        class="inline-flex items-center gap-0.5 focus:outline-none cursor-pointer group"
+        aria-label="larba."
+      >
+        <span class="editorial-heading text-[24px] text-lotus-primary theme-transition leading-none">larba</span>
+        <span class="relative inline-flex items-center justify-center w-3.5 h-3.5 translate-y-[1px]" aria-hidden="true">
+          <svg class="w-3.5 h-3.5 group-hover:rotate-45 transition-transform duration-300" viewBox="0 0 16 16" fill="none">
+            <defs>
+              <linearGradient id="lotusBrandGrad" x1="0" y1="0" x2="16" y2="16" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#F6C856" />
+                <stop offset="50%" stop-color="#B78EF5" />
+                <stop offset="100%" stop-color="#5663D1" />
+              </linearGradient>
+            </defs>
+            <path d="M8 1C8.6 5.2 10.8 7.4 15 8C10.8 8.6 8.6 10.8 8 15C7.4 10.8 5.2 8.6 1 8C5.2 7.4 7.4 5.2 8 1Z" fill="url(#lotusBrandGrad)" />
+          </svg>
+        </span>
+      </button>
+
+      <!-- Right Header Controls: Theme Switcher & Active Status Pill -->
+      <div class="flex items-center gap-2">
+        <button
+          id="themeToggleBtn"
+          type="button"
+          aria-label="Ganti tema tampilan"
+          class="lotus-pill inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-medium text-lotus-primary cursor-pointer"
+        >
+          <svg id="iconSun" class="w-3.5 h-3.5 text-lotus-gold shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="m4.93 4.93 1.41 1.41"></path>
+            <path d="m17.66 17.66 1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="m6.34 17.66-1.41 1.41"></path>
+            <path d="m19.07 4.93-1.41 1.41"></path>
+          </svg>
+          <svg id="iconMoon" class="hidden w-3.5 h-3.5 text-lotus-accent shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+          </svg>
+          <span id="themeToggleLabel" class="whitespace-nowrap">Mode Terang</span>
+        </button>
+
+        <div
+          id="authBadgePill"
+          class="hidden lotus-pill inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-medium text-lotus-secondary"
+        >
+          <span class="w-1.5 h-1.5 rounded-full bg-[#6EE7B7]"></span>
+          <span>Barranetmedia</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- 2. Editorial Hero Header -->
+    <section class="mb-9">
+      <div class="lotus-pill inline-flex items-center gap-2 px-3 py-1 rounded-full backdrop-blur-md mb-4">
+        <span class="w-1.5 h-1.5 rounded-full radar-pulse-dot shrink-0"></span>
+        <span class="font-mono text-[10.5px] font-medium tracking-[0.08em] uppercase text-lotus-primary theme-transition">
+          RAHASIA PERUSAHAAN &middot; SPX RADAR
+        </span>
+      </div>
+
+      <h1 class="editorial-heading text-[30px] sm:text-[35px] text-lotus-primary theme-transition mb-2.5">
+        Cek &amp; lacak resi paket dalam satu layar.
+      </h1>
+
+      <p class="text-[14px] leading-relaxed text-lotus-secondary theme-transition max-w-[480px]">
+        Cari data pesanan pelanggan dan pantau riwayat perjalanan SPX secara langsung tanpa keluar dari halaman.
+      </p>
+    </section>
+
+    <!-- 3. Login Panel (Shown before OAuth verification) -->
+    <section id="loginPanel" class="py-6">
+      <hr class="lotus-divider mb-8" />
+      <p class="text-[13.5px] font-medium text-lotus-primary mb-1.5">Akses Terbatas Tim CS</p>
+      <p class="text-[12.5px] text-lotus-secondary mb-5">
+        Masuk menggunakan akun Google yang terdaftar untuk membuka database resi.
+      </p>
+      <div id="googleSignInBtn"></div>
+      <p id="loginStatus" class="font-mono text-[12px] text-lotus-gold mt-4"></p>
+    </section>
+
+    <!-- 4. Search & Filter Panel (Shown after OAuth verification) -->
+    <section id="searchPanel" style="display:none;" aria-label="Pencarian Resi">
+      <!-- Borderless Underline Multi-Query Input -->
+      <div class="search-underline pb-3">
+        <div class="flex items-start gap-2">
+          <textarea
+            id="queryInput"
+            rows="2"
+            spellcheck="false"
+            placeholder="Cari resi, nama, atau no HP (pisahkan koma / baris baru)..."
+            class="w-full min-w-0 bg-transparent font-mono text-[14.5px] leading-relaxed text-lotus-primary theme-transition placeholder:font-sans placeholder:text-[14px] focus:outline-none resize-y"
+          ></textarea>
+          <button
+            id="clearInputInlineBtn"
+            type="button"
+            aria-label="Hapus kata kunci"
+            class="text-lotus-secondary hover:text-lotus-primary text-lg leading-none px-1.5 py-0.5 transition-colors cursor-pointer shrink-0"
+          >
+            &times;
+          </button>
+        </div>
+      </div>
+
+      <!-- Compact Translucent Filter Pills Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-4">
+        <div class="lotus-pill rounded-xl px-3 py-2">
+          <label for="csInput" class="block font-mono text-[10px] uppercase tracking-wider text-lotus-muted mb-0.5">CS</label>
+          <input
+            type="text"
+            id="csInput"
+            placeholder="Semua CS"
+            class="w-full bg-transparent text-[12.5px] font-medium text-lotus-primary focus:outline-none"
+          />
+        </div>
+
+        <div class="lotus-pill rounded-xl px-3 py-2">
+          <label for="statusInput" class="block font-mono text-[10px] uppercase tracking-wider text-lotus-muted mb-0.5">Status</label>
+          <select
+            id="statusInput"
+            class="w-full bg-transparent text-[12.5px] font-medium text-lotus-primary focus:outline-none cursor-pointer"
+          >
+            <option value="">Semua status</option>
+            <option value="ongoing">On going</option>
+            <option value="delivered">Delivered</option>
+            <option value="retur">Retur</option>
+          </select>
+        </div>
+
+        <div class="lotus-pill rounded-xl px-3 py-2">
+          <label for="dateFromInput" class="block font-mono text-[10px] uppercase tracking-wider text-lotus-muted mb-0.5">Dari</label>
+          <input
+            type="date"
+            id="dateFromInput"
+            class="w-full bg-transparent text-[12px] font-medium text-lotus-primary focus:outline-none"
+          />
+        </div>
+
+        <div class="lotus-pill rounded-xl px-3 py-2">
+          <label for="dateToInput" class="block font-mono text-[10px] uppercase tracking-wider text-lotus-muted mb-0.5">Sampai</label>
+          <input
+            type="date"
+            id="dateToInput"
+            class="w-full bg-transparent text-[12px] font-medium text-lotus-primary focus:outline-none"
+          />
+        </div>
+      </div>
+
+      <!-- Action Row -->
+      <div class="flex flex-wrap items-center justify-between gap-3 mt-5">
+        <div class="flex flex-wrap items-center gap-2">
+          <button
+            id="searchBtn"
+            type="button"
+            class="lotus-cta-btn font-bold text-[13px] tracking-[-0.01em] px-5 py-2.5 rounded-full cursor-pointer"
+          >
+            Cari Resi
+          </button>
+
+          <button
+            id="todayOngoingBtn"
+            type="button"
+            class="lotus-pill text-[12.5px] font-medium text-lotus-primary px-4 py-2.5 rounded-full cursor-pointer"
+          >
+            Semua ongoing
+          </button>
+
+          <button
+            id="clearBtn"
+            type="button"
+            class="text-[12.5px] font-medium text-lotus-secondary hover:text-lotus-primary px-3 py-2 transition-colors cursor-pointer"
+          >
+            Bersihkan
+          </button>
+        </div>
+
+        <span id="statusLine" class="font-mono text-[11.5px] text-lotus-secondary"></span>
+      </div>
+    </section>
+
+    <!-- Hairline Divider -->
+    <hr class="lotus-divider my-9" />
+
+    <!-- 5. Lightweight Shimmer Skeleton During Search -->
+    <div id="searchShimmer" class="hidden space-y-6 py-2" aria-hidden="true">
+      <div class="space-y-2.5">
+        <div class="h-4 w-40 rounded-full shimmer-bar"></div>
+        <div class="h-5 w-64 rounded shimmer-bar"></div>
+        <div class="h-3 w-48 rounded shimmer-bar"></div>
+      </div>
+      <hr class="lotus-divider" />
+      <div class="space-y-2.5">
+        <div class="h-4 w-36 rounded-full shimmer-bar"></div>
+        <div class="h-5 w-56 rounded shimmer-bar"></div>
+        <div class="h-3 w-52 rounded shimmer-bar"></div>
+      </div>
+    </div>
+
+    <!-- 6. Cardless Editorial Results List -->
+    <section id="resultsArea" aria-label="Hasil Pencarian Resi"></section>
+
+  </div>
+
+  <!-- ========================================================================
+       SLIDE-UP FROSTED BOTTOM SHEET ('In-App Live SPX Tracking')
+       ======================================================================== -->
+  <div
+    id="trackDrawerOverlay"
+    aria-hidden="true"
+    class="drawer-overlay fixed inset-0 z-50 backdrop-blur-sm flex flex-col justify-end items-center"
+  >
+    <!-- Clickable Backdrop -->
+    <div id="drawerBackdrop" class="w-full flex-1"></div>
+
+    <!-- Centered Bottom Sheet Panel -->
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Detail Perjalanan Paket"
+      class="drawer-sheet w-full max-w-[580px] max-h-[86vh] rounded-t-3xl px-6 pt-4 pb-10 flex flex-col"
+    >
+      <!-- Drag Handle -->
+      <div style="background-color: var(--hairline);" class="w-10 h-1 rounded-full mx-auto mb-5 shrink-0"></div>
+
+      <!-- Top Bar: Courier + Resi + Copy + Close -->
+      <div style="border-bottom: 1px solid var(--hairline);" class="flex items-center justify-between gap-3 pb-4 shrink-0">
+        <div class="inline-flex items-center gap-2 flex-wrap">
+          <span class="text-[13px] font-semibold text-lotus-accent">SPX Express</span>
+          <span class="text-lotus-muted">&middot;</span>
+          <span id="drawerResiCode" class="font-mono text-[13.5px] font-medium text-lotus-primary">-</span>
+          <button
+            id="drawerCopyBtn"
+            type="button"
+            class="inline-flex items-center gap-1 text-[11.5px] font-medium text-lotus-secondary hover:text-lotus-primary transition-colors cursor-pointer ml-1"
+          >
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span id="drawerCopyLabel">Salin</span>
+          </button>
+        </div>
+
+        <button
+          id="closeDrawerBtn"
+          type="button"
+          class="lotus-pill text-[12px] font-medium text-lotus-secondary hover:text-lotus-primary px-3 py-1 rounded-full cursor-pointer"
+        >
+          Tutup
+        </button>
+      </div>
+
+      <!-- Scrollable Live Tracking Body -->
+      <div id="drawerBody" class="overflow-y-auto pt-6 pr-1">
+        <!-- Populated dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Subtle Floating Toast Notification -->
+  <div
+    id="toastBanner"
+    role="status"
+    aria-live="polite"
+    class="pointer-events-none fixed bottom-6 left-1/2 -translate-x-1/2 z-50 opacity-0 translate-y-2 transition-all duration-200"
+  >
+    <div class="lotus-toast inline-flex items-center gap-2 px-4 py-2 rounded-full text-[12.5px] font-medium text-lotus-primary whitespace-nowrap">
+      <span style="background-color: var(--accent-gold);" class="w-1.5 h-1.5 rounded-full"></span>
+      <span id="toastText">Nomor resi disalin</span>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * larba. — Pelacakan & Cek Resi SPX (Twilight Lotus Dual Theme)
+     */
+    var API_URL = "https://script.google.com/macros/s/AKfycbyZo8dEMfDcS84-WDwZiZeZS-WzdAwLOAyr_lU1TAovOZdW7PV0Qh338mhNJRDOKua1oA/exec";
+    var GOOGLE_CLIENT_ID = "315770296664-pkethfkpdhd9bqj1lnjj0ec06eos8rlv.apps.googleusercontent.com";
+
+    var ID_TOKEN = null;
+    var expandedCards = {};
+    var lastData = null;
+    var trackingCache = {};
+    var activeDrawerResi = "";
+    var toastTimer = null;
+
+    var el = {
+      brandResetBtn: document.getElementById('brandResetBtn'),
+      themeToggleBtn: document.getElementById('themeToggleBtn'),
+      themeToggleLabel: document.getElementById('themeToggleLabel'),
+      iconSun: document.getElementById('iconSun'),
+      iconMoon: document.getElementById('iconMoon'),
+      authBadgePill: document.getElementById('authBadgePill'),
+
+      loginPanel: document.getElementById('loginPanel'),
+      loginStatus: document.getElementById('loginStatus'),
+      searchPanel: document.getElementById('searchPanel'),
+
+      queryInput: document.getElementById('queryInput'),
+      clearInputInlineBtn: document.getElementById('clearInputInlineBtn'),
+      csInput: document.getElementById('csInput'),
+      statusInput: document.getElementById('statusInput'),
+      dateFromInput: document.getElementById('dateFromInput'),
+      dateToInput: document.getElementById('dateToInput'),
+
+      searchBtn: document.getElementById('searchBtn'),
+      todayOngoingBtn: document.getElementById('todayOngoingBtn'),
+      clearBtn: document.getElementById('clearBtn'),
+      statusLine: document.getElementById('statusLine'),
+
+      searchShimmer: document.getElementById('searchShimmer'),
+      resultsArea: document.getElementById('resultsArea'),
+
+      trackDrawerOverlay: document.getElementById('trackDrawerOverlay'),
+      drawerBackdrop: document.getElementById('drawerBackdrop'),
+      closeDrawerBtn: document.getElementById('closeDrawerBtn'),
+      drawerResiCode: document.getElementById('drawerResiCode'),
+      drawerCopyBtn: document.getElementById('drawerCopyBtn'),
+      drawerCopyLabel: document.getElementById('drawerCopyLabel'),
+      drawerBody: document.getElementById('drawerBody'),
+
+      toastBanner: document.getElementById('toastBanner'),
+      toastText: document.getElementById('toastText')
+    };
+
+    /* ========================================================================
+       1. DUAL THEME SWITCHER (Twilight Lotus Dark <-> Morning Lotus Light)
+       ======================================================================== */
+    function syncThemeUI() {
+      var isLight = document.documentElement.classList.contains('light');
+      if (isLight) {
+        el.iconSun.classList.add('hidden');
+        el.iconMoon.classList.remove('hidden');
+        el.themeToggleLabel.textContent = 'Mode Gelap';
+      } else {
+        el.iconMoon.classList.add('hidden');
+        el.iconSun.classList.remove('hidden');
+        el.themeToggleLabel.textContent = 'Mode Terang';
+      }
+    }
+
+    function toggleTheme() {
+      var root = document.documentElement;
+      var switchingToLight = !root.classList.contains('light');
+      if (switchingToLight) {
+        root.classList.remove('dark');
+        root.classList.add('light');
+      } else {
+        root.classList.remove('light');
+        root.classList.add('dark');
+      }
+      try {
+        localStorage.setItem('larba_theme_mode', switchingToLight ? 'light' : 'dark');
+      } catch (e) {}
+      syncThemeUI();
+      showToast(switchingToLight ? 'Beralih ke Mode Terang' : 'Beralih ke Mode Gelap');
+    }
+
+    el.themeToggleBtn.addEventListener('click', toggleTheme);
+    syncThemeUI();
+
+    function showToast(message) {
+      el.toastText.textContent = message;
+      el.toastBanner.classList.remove('opacity-0', 'translate-y-2');
+      el.toastBanner.classList.add('opacity-100', 'translate-y-0');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () {
+        el.toastBanner.classList.remove('opacity-100', 'translate-y-0');
+        el.toastBanner.classList.add('opacity-0', 'translate-y-2');
+      }, 2200);
+    }
+
+    function copyTextToClipboard(text, customToast) {
+      var temp = document.createElement('textarea');
+      temp.value = text;
+      temp.setAttribute('readonly', '');
+      temp.style.position = 'fixed';
+      temp.style.opacity = '0';
+      document.body.appendChild(temp);
+      temp.select();
+      try {
+        document.execCommand('copy');
+        showToast(customToast || 'Nomor resi disalin');
+      } catch (e) {
+        showToast('Gagal menyalin teks');
+      }
+      document.body.removeChild(temp);
+    }
+
+    /* ========================================================================
+       2. GOOGLE SIGN-IN & JSONP BACKEND BRIDGE
+       ======================================================================== */
+    window.onload = function () {
+      if (typeof google === 'undefined') return;
+      google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleGoogleSignIn,
+        auto_select: true
+      });
+      google.accounts.id.renderButton(
+        document.getElementById('googleSignInBtn'),
+        { theme: 'outline', size: 'large', text: 'signin_with', shape: 'pill' }
+      );
+      google.accounts.id.prompt();
+    };
+
+    function jsonpRequest(params, callback) {
+      var callbackName = 'jsonp_cb_' + Date.now() + '_' + Math.floor(Math.random() * 100000);
+      window[callbackName] = function (data) {
+        delete window[callbackName];
+        if (script.parentNode) document.body.removeChild(script);
+        callback(null, data);
+      };
+      var query = Object.keys(params).map(function (k) {
+        return k + '=' + encodeURIComponent(params[k]);
+      }).join('&');
+      var script = document.createElement('script');
+      script.src = API_URL + '?' + query + '&callback=' + callbackName;
+      script.onerror = function () {
+        delete window[callbackName];
+        if (script.parentNode) document.body.removeChild(script);
+        callback(new Error('Gagal memuat data dari server.'));
+      };
+      document.body.appendChild(script);
+    }
+
+    function handleGoogleSignIn(response) {
+      ID_TOKEN = response.credential;
+      el.loginStatus.textContent = 'Memeriksa akses akun...';
+
+      jsonpRequest({ token: ID_TOKEN, q: '__cek_akses__' }, function (err, data) {
+        if (err) {
+          el.loginStatus.textContent = 'Gagal terhubung: ' + err.message;
+          return;
+        }
+        if (!data.success) {
+          el.loginStatus.textContent = data.error;
+          ID_TOKEN = null;
+          return;
+        }
+        el.loginPanel.style.display = 'none';
+        el.searchPanel.style.display = '';
+        el.authBadgePill.classList.remove('hidden');
+      });
+    }
+
+    /* ========================================================================
+       3. SEARCH & RENDERING CARDLESS ORDER LIST
+       ======================================================================== */
+    el.clearInputInlineBtn.addEventListener('click', function () {
+      el.queryInput.value = '';
+      el.queryInput.focus();
     });
-  }
 
-  function toggleCard(resiId) {
-    expandedCards[resiId] = !expandedCards[resiId];
-    if (lastData) renderResults(lastData);
-  }
+    el.clearBtn.addEventListener('click', function () {
+      el.queryInput.value = '';
+      el.csInput.value = '';
+      el.statusInput.value = '';
+      el.dateFromInput.value = '';
+      el.dateToInput.value = '';
+      el.resultsArea.innerHTML = '';
+      el.statusLine.textContent = '';
+    });
 
-  function renderResults(data) {
-    lastData = data;
-    var html = '';
+    el.searchBtn.addEventListener('click', searchResi);
+    el.brandResetBtn.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
 
-    html += '<div class="summary">' +
-      '<div class="chip found">&#10003; Ditemukan: ' + data.total + '</div>' +
-      (data.notFound.length > 0 ? '<div class="chip missing">&#10007; Tidak ditemukan: ' + data.notFound.length + '</div>' : '') +
+    el.todayOngoingBtn.addEventListener('click', function () {
+      el.queryInput.value = '';
+      el.csInput.value = '';
+      el.statusInput.value = 'ongoing';
+      el.dateFromInput.value = '';
+      el.dateToInput.value = '';
+      searchResi();
+    });
+
+    el.queryInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+        searchResi();
+      }
+    });
+
+    function getStatusMeta(status) {
+      var s = (status || '').toLowerCase();
+      if (s.indexOf('deliver') !== -1) {
+        return { label: status, colorClass: 'text-lotus-delivered', dotColor: 'var(--accent-delivered)' };
+      }
+      if (s.indexOf('ongoing') !== -1 || s.indexOf('on going') !== -1 || s.indexOf('on-going') !== -1 || s.indexOf('proses') !== -1) {
+        return { label: status, colorClass: 'text-lotus-gold', dotColor: 'var(--accent-gold)' };
+      }
+      if (s.indexOf('retur') !== -1) {
+        return { label: status, colorClass: 'text-lotus-retur', dotColor: 'var(--accent-retur)' };
+      }
+      return { label: status || 'Lainnya', colorClass: 'text-lotus-accent', dotColor: 'var(--accent-primary)' };
+    }
+
+    function buildWaMessage(item) {
+      return "Halo Kak " + item.nama + " \uD83D\uDC4B\n\n" +
+        "\uD83D\uDCE6 Nomor Resi Pesanan " + item.produk + ":\n" +
+        item.resi + "\n\n" +
+        "Mohon pastikan nomor resi pada paket sama dengan nomor di atas saat paket diterima.\n\n" +
+        "Cek posisi paket di sini:\n" +
+        item.linkResi + "\n\n" +
+        "Terima kasih \uD83D\uDE4F";
+    }
+
+    function waLink(item) {
+      var phone = String(item.noHp).replace(/\D/g, '');
+      var normalized = phone.charAt(0) === '0'
+        ? '62' + phone.slice(1)
+        : (phone.indexOf('62') === 0 ? phone : '62' + phone);
+      return 'https://wa.me/' + normalized + '?text=' + encodeURIComponent(buildWaMessage(item));
+    }
+
+    function searchResi() {
+      var raw = el.queryInput.value.trim();
+      var cs = el.csInput.value.trim();
+      var status = el.statusInput.value;
+      var dateFrom = el.dateFromInput.value;
+      var dateTo = el.dateToInput.value;
+
+      if (!raw && !cs && !status && !dateFrom && !dateTo) {
+        el.statusLine.textContent = 'Isi kata kunci atau pilih filter dulu.';
+        showToast('Masukkan kata kunci atau pilih filter');
+        return;
+      }
+
+      el.searchBtn.disabled = true;
+      el.statusLine.textContent = 'Memindai data...';
+      el.resultsArea.innerHTML = '';
+      el.searchShimmer.classList.remove('hidden');
+
+      jsonpRequest({
+        token: ID_TOKEN,
+        q: raw,
+        cs: cs,
+        status: status,
+        dateFrom: dateFrom,
+        dateTo: dateTo
+      }, function (err, data) {
+        el.searchBtn.disabled = false;
+        el.searchShimmer.classList.add('hidden');
+
+        if (err) {
+          el.statusLine.textContent = 'Gagal terhubung';
+          showToast(err.message);
+          return;
+        }
+        if (!data.success) {
+          el.statusLine.textContent = 'Terjadi kesalahan';
+          showToast(data.error);
+          return;
+        }
+        el.statusLine.textContent = data.total + ' hasil ditemukan';
+        renderResults(data);
+      });
+    }
+
+    function toggleCard(resiId) {
+      expandedCards[resiId] = !expandedCards[resiId];
+      if (lastData) renderResults(lastData);
+    }
+
+    function renderResults(data) {
+      lastData = data;
+      var html = '';
+
+      // Summary Pills
+      html += '<div class="flex flex-wrap items-center justify-between gap-2 mb-6">' +
+        '<div class="flex items-center gap-2 flex-wrap">' +
+          '<span style="background-color: var(--badge-bg);" class="font-mono text-[11.5px] font-medium text-lotus-accent px-3 py-1 rounded-full">&#10003; Ditemukan: ' + data.total + '</span>' +
+          (data.notFound.length > 0 ? '<span class="lotus-pill font-mono text-[11.5px] text-lotus-retur px-3 py-1 rounded-full">&#10007; Tidak ada: ' + data.notFound.length + '</span>' : '') +
+        '</div>' +
       '</div>';
 
-    if (data.notFound.length > 0) {
-      html += '<div class="missing-list">Tidak ditemukan: ' + data.notFound.map(escapeHtml).join(', ') + '</div>';
+      if (data.notFound.length > 0) {
+        html += '<div class="lotus-pill rounded-xl px-4 py-3 mb-6 font-mono text-[12px] text-lotus-retur">' +
+          'Tidak ditemukan: ' + data.notFound.map(escapeHtml).join(', ') +
+        '</div>';
+      }
+
+      if (data.data.length === 0) {
+        html += '<div class="py-12 text-center">' +
+          '<p class="text-[14.5px] font-medium text-lotus-primary">Tidak ada data yang cocok</p>' +
+          '<p class="text-[12.5px] text-lotus-secondary mt-1">Coba ubah kata kunci pencarian atau rentang tanggal.</p>' +
+        '</div>';
+      } else {
+        // Cardless Editorial List separated by 1px Hairline Dividers
+        html += '<div>';
+        data.data.forEach(function (item, index) {
+          var meta = getStatusMeta(item.status);
+          var isOpen = !!expandedCards[item.resi];
+          var hargaFmt = 'Rp' + Number(item.harga || 0).toLocaleString('id-ID');
+          var resiTarget = item.resi || item.linkResi;
+          var safeResi = resiTarget.replace(/'/g, "\\'");
+          var safeLink = (item.linkResi || ('https://spx.co.id/track?' + item.resi)).replace(/'/g, "\\'");
+
+          if (index > 0) {
+            html += '<hr class="lotus-divider my-6" />';
+          }
+
+          html += '<article class="group">' +
+            // Top Metadata Row
+            '<div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">' +
+              '<div class="inline-flex items-center gap-2 flex-wrap">' +
+                '<span style="background-color:' + meta.dotColor + ';" class="w-1.5 h-1.5 rounded-full shrink-0"></span>' +
+                '<button type="button" onclick="copyTextToClipboard(\'' + safeResi + '\')" class="font-mono text-[14px] font-semibold text-lotus-primary hover:text-lotus-accent transition-colors cursor-pointer" title="Klik untuk salin resi">' +
+                  escapeHtml(item.resi) +
+                '</button>' +
+                '<span class="text-lotus-muted">&middot;</span>' +
+                '<span class="font-mono text-[11px] font-medium uppercase tracking-wider ' + meta.colorClass + '">' +
+                  escapeHtml(meta.label) +
+                '</span>' +
+              '</div>' +
+
+              '<div class="font-mono text-[12px] text-lotus-secondary">' +
+                escapeHtml(item.tanggal) +
+                (item.cs ? ' <span class="text-lotus-muted">&middot;</span> ' + escapeHtml(item.cs) : '') +
+              '</div>' +
+            '</div>' +
+
+            // Customer & Price Row
+            '<div class="flex flex-wrap items-baseline justify-between gap-2 mb-1">' +
+              '<p class="text-[14.5px] font-semibold text-lotus-primary">' +
+                escapeHtml(item.nama) +
+                (item.noHp ? ' <span class="font-mono text-[12.5px] font-normal text-lotus-secondary">&middot; ' + escapeHtml(item.noHp) + '</span>' : '') +
+              '</p>' +
+              '<span class="font-mono text-[13px] font-medium text-lotus-gold">' + hargaFmt + '</span>' +
+            '</div>' +
+
+            // Address & Product (Collapsible)
+            '<p class="text-[13px] text-lotus-secondary leading-relaxed ' + (isOpen ? '' : 'truncate') + '">' +
+              escapeHtml(item.produk) +
+              (item.alamat ? ' <span class="text-lotus-muted">&mdash;</span> ' + escapeHtml(item.alamat) : '') +
+            '</p>' +
+
+            // Action Links & Pills
+            '<div class="flex flex-wrap items-center justify-between gap-3 mt-3.5">' +
+              '<div class="flex items-center gap-2 flex-wrap">' +
+                (resiTarget
+                  ? '<button type="button" onclick="openLiveTrack(\'' + safeResi + '\', \'' + safeLink + '\')" class="lotus-pill inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[12px] font-semibold text-lotus-accent hover:text-lotus-primary cursor-pointer">' +
+                      '<span class="w-1.5 h-1.5 rounded-full radar-pulse-dot"></span>' +
+                      '<span>Lacak Paket</span>' +
+                    '</button>'
+                  : '') +
+                (item.noHp
+                  ? '<a href="' + waLink(item) + '" target="_blank" rel="noopener" class="lotus-pill inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[12px] font-medium text-lotus-delivered hover:opacity-90">' +
+                      '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.5 2 12.04 2zm5.8 14.16c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.13.11-1.82-.12-.42-.13-.96-.31-1.65-.6-2.9-1.25-4.79-4.17-4.94-4.36-.14-.2-1.18-1.57-1.18-3 0-1.42.75-2.12 1.01-2.41.27-.29.58-.36.78-.36.2 0 .39 0 .56.01.18.01.42-.07.65.5.24.58.82 2 .89 2.15.07.14.12.31.02.5-.09.19-.14.31-.28.48-.14.16-.29.36-.42.48-.14.14-.28.29-.12.57.16.28.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.22 1.37.28.14.44.12.6-.07.16-.19.68-.79.87-1.06.18-.28.37-.23.62-.14.25.09 1.6.76 1.87.9.28.14.46.21.53.32.07.12.07.68-.17 1.36z"/></svg>' +
+                      '<span>WhatsApp</span>' +
+                    '</a>'
+                  : '') +
+                '<button type="button" onclick="copyTextToClipboard(\'' + safeResi + '\')" class="text-[12px] font-medium text-lotus-secondary hover:text-lotus-primary px-2 py-1 transition-colors cursor-pointer">' +
+                  'Salin' +
+                '</button>' +
+              '</div>' +
+
+              '<button type="button" onclick="toggleCard(\'' + item.resi.replace(/'/g, "\\'") + '\')" class="inline-flex items-center gap-1 text-[11.5px] font-medium text-lotus-muted hover:text-lotus-primary transition-colors cursor-pointer">' +
+                '<span>' + (isOpen ? 'Ringkas' : 'Detail') + '</span>' +
+                '<svg class="w-3.5 h-3.5 transition-transform duration-150 ' + (isOpen ? 'rotate-180' : '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>' +
+              '</button>' +
+            '</div>' +
+          '</article>';
+        });
+        html += '</div>';
+      }
+
+      el.resultsArea.innerHTML = html;
     }
 
-    if (data.data.length === 0) {
-      html += '<div class="empty">Tidak ada data yang cocok.</div>';
-    } else {
-      html += '<div class="cards">';
-      data.data.forEach(function (item) {
-        var cls = statusClass(item.status);
-        var isOpen = !!expandedCards[item.resi];
-        var lineClass = isOpen ? ' open' : '';
-        var hargaFmt = 'Rp' + Number(item.harga || 0).toLocaleString('id-ID');
-        var resiTarget = item.resi || item.linkResi;
-        var safeResi = resiTarget.replace(/'/g, "\\'");
-        var safeLink = (item.linkResi || ('https://spx.co.id/track?' + item.resi)).replace(/'/g, "\\'");
+    /* ========================================================================
+       4. SLIDE-UP FROSTED SHEET — IN-APP LIVE TRACKING (TWILIGHT LOTUS STYLE)
+       ======================================================================== */
+    function extractCityName(locationStr) {
+      if (!locationStr) return '';
+      // Bersihkan akhiran seperti "DC", "Hub", "First Mile Hub", angka, dll.
+      var cleaned = locationStr
+        .replace(/\b(First Mile Hub|Last Mile Hub|Sorting Center|Gateway|Hub|DC)\b/gi, '')
+        .replace(/\d+/g, '')
+        .trim();
+      return cleaned || locationStr;
+    }
 
-        html += '<div class="card ' + cls + '">' +
-          '<div class="card-head">' +
-            '<span class="resi-code">' + escapeHtml(item.resi) + '</span>' +
-            '<span class="status-badge">' + escapeHtml(item.status) + '</span>' +
+    function openLiveTrack(resiOrUrl, fallbackLink) {
+      var cleanResi = resiOrUrl.indexOf('?') !== -1
+        ? resiOrUrl.split('?')[1].split('&')[0].trim()
+        : resiOrUrl.trim();
+
+      activeDrawerResi = cleanResi;
+      el.drawerResiCode.textContent = cleanResi;
+      el.drawerCopyLabel.textContent = 'Salin';
+      el.trackDrawerOverlay.classList.add('is-open');
+      el.trackDrawerOverlay.setAttribute('aria-hidden', 'false');
+
+      if (trackingCache[cleanResi]) {
+        renderDrawerTracking(trackingCache[cleanResi], fallbackLink);
+        return;
+      }
+
+      // Shimmer Loading Skeleton inside Drawer
+      el.drawerBody.innerHTML =
+        '<div class="space-y-5 py-2" aria-hidden="true">' +
+          '<div class="h-3.5 w-32 rounded-full shimmer-bar"></div>' +
+          '<div class="h-7 w-3/4 rounded-lg shimmer-bar"></div>' +
+          '<div class="h-3 w-1/2 rounded-full shimmer-bar"></div>' +
+          '<div class="pt-3 space-y-2.5">' +
+            '<div class="flex justify-between"><div class="h-4 w-20 rounded shimmer-bar"></div><div class="h-4 w-20 rounded shimmer-bar"></div></div>' +
+            '<div class="h-[2px] w-full rounded-full shimmer-bar"></div>' +
           '</div>' +
-          '<div class="card-subhead">' +
-            '<span class="card-date">' + escapeHtml(item.tanggal) + (item.cs ? ', ' + escapeHtml(item.cs) : '') + '</span>' +
-            '<span class="card-price">' + hargaFmt + '</span>' +
-          '</div>' +
-          '<div class="card-namehp">' + escapeHtml(item.nama) + ' <span class="sep">&bull;</span> ' + escapeHtml(item.noHp) + '</div>' +
-          '<div class="card-line' + lineClass + '">' + escapeHtml(item.alamat) + '</div>' +
-          '<div class="card-line' + lineClass + '">' + escapeHtml(item.produk) + '</div>' +
-          '<div class="card-actions">' +
-            (resiTarget ? '<button type="button" class="btn-action btn-resi" onclick="openLiveTrack(\'' + safeResi + '\', \'' + safeLink + '\')">Lacak paket</button>' : '') +
-            (item.noHp ? '<a class="btn-action btn-wa" href="' + waLink(item) + '" target="_blank"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.5 2 12.04 2zm5.8 14.16c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.13.11-1.82-.12-.42-.13-.96-.31-1.65-.6-2.9-1.25-4.79-4.17-4.94-4.36-.14-.2-1.18-1.57-1.18-3 0-1.42.75-2.12 1.01-2.41.27-.29.58-.36.78-.36.2 0 .39 0 .56.01.18.01.42-.07.65.5.24.58.82 2 .89 2.15.07.14.12.31.02.5-.09.19-.14.31-.28.48-.14.16-.29.36-.42.48-.14.14-.28.29-.12.57.16.28.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.22 1.37.28.14.44.12.6-.07.16-.19.68-.79.87-1.06.18-.28.37-.23.62-.14.25.09 1.6.76 1.87.9.28.14.46.21.53.32.07.12.07.68-.17 1.36z"/></svg>WhatsApp</a>' : '') +
-            '<button type="button" class="btn-toggle' + (isOpen ? ' open' : '') + '" onclick="toggleCard(\'' + item.resi.replace(/'/g, "\\'") + '\')" aria-label="Detail"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button>' +
+          '<hr class="lotus-divider my-6" />' +
+          '<div class="space-y-4">' +
+            '<div class="h-10 w-full rounded-lg shimmer-bar"></div>' +
+            '<div class="h-10 w-5/6 rounded-lg shimmer-bar"></div>' +
+            '<div class="h-10 w-4/6 rounded-lg shimmer-bar"></div>' +
           '</div>' +
         '</div>';
+
+      jsonpRequest({ token: ID_TOKEN, action: 'track', resi: cleanResi }, function (err, res) {
+        if (err || !res || !res.success) {
+          var msg = (err && err.message) || (res && res.error) || 'Data pelacakan SPX belum tersedia.';
+          el.drawerBody.innerHTML =
+            '<div class="py-10 text-center">' +
+              '<p class="text-[14px] font-medium text-lotus-retur mb-2">' + escapeHtml(msg) + '</p>' +
+              '<p class="text-[12.5px] text-lotus-secondary mb-5">Kamu tetap bisa mengeceknya langsung melalui situs resmi SPX.</p>' +
+              '<a href="' + escapeHtml(fallbackLink) + '" target="_blank" rel="noopener" class="lotus-cta-btn inline-flex items-center gap-1.5 text-[12.5px] font-bold px-5 py-2.5 rounded-full">' +
+                '<span>Buka spx.co.id</span>' +
+                '<span>&nearr;</span>' +
+              '</a>' +
+            '</div>';
+          return;
+        }
+
+        trackingCache[cleanResi] = res;
+        renderDrawerTracking(res, fallbackLink);
       });
-      html += '</div>';
     }
 
-    resultsArea.innerHTML = html;
-  }
+    function renderDrawerTracking(data, fallbackLink) {
+      var riwayat = data.riwayat || [];
+      var isDelivered = (data.statusUtama || '').toLowerCase().indexOf('deliver') !== -1;
+      var latest = riwayat[0] || {};
+      var latestCode = latest.milestoneCode || 1;
 
-  /* FUNGSI IN-APP LIVE TRACKING MODAL */
-  function openLiveTrack(resiOrUrl, fallbackLink) {
-    var cleanResi = resiOrUrl.indexOf('?') !== -1 ? resiOrUrl.split('?')[1].split('&')[0] : resiOrUrl;
-    var modal = document.getElementById('trackModal');
-    var modalTitle = document.getElementById('modalResiTitle');
-    var modalBody = document.getElementById('modalBody');
+      // Hitung persentase perjalanan untuk progress beam 2px
+      var progressPct = 22;
+      if (isDelivered || latestCode >= 8) progressPct = 100;
+      else if (latestCode >= 6) progressPct = 88;
+      else if (latestCode >= 5) progressPct = 68;
+      else if (latestCode >= 4) progressPct = 42;
 
-    modalTitle.textContent = cleanResi;
-    modal.classList.add('active');
+      // Ekstrak kota asal (dari checkpoint terlama yang punya lokasi) & kota tujuan (dari checkpoint terbaru)
+      var originCity = 'Pengirim';
+      for (var i = riwayat.length - 1; i >= 0; i--) {
+        if (riwayat[i].lokasi) {
+          originCity = extractCityName(riwayat[i].lokasi);
+          break;
+        }
+      }
+      var destinationCity = latest.lokasi ? extractCityName(latest.lokasi) : 'Tujuan';
 
-    if (trackingCache[cleanResi]) {
-      renderModalTracking(trackingCache[cleanResi], fallbackLink);
-      return;
-    }
-
-    modalBody.innerHTML =
-      '<div class="loader-box">' +
-        '<div class="spinner"></div>' +
-        '<div>Mengambil riwayat perjalanan dari SPX...</div>' +
-      '</div>';
-
-    jsonpRequest({ token: ID_TOKEN, action: 'track', resi: cleanResi }, function (err, res) {
-      if (err || !res || !res.success) {
-        var msg = (err && err.message) || (res && res.error) || 'Gagal memuat riwayat.';
-        modalBody.innerHTML =
-          '<div class="loader-box">' +
-            '<p style="color:#fda4af;margin-bottom:14px;">' + escapeHtml(msg) + '</p>' +
-            '<a class="ext-link" href="' + escapeHtml(fallbackLink) + '" target="_blank">Buka langsung di halaman SPX &rarr;</a>' +
-          '</div>';
-        return;
+      // Format timestamp pembaruan terakhir
+      var latestTimeStr = '';
+      if (latest.waktu) {
+        var dLatest = new Date(latest.waktu * 1000);
+        latestTimeStr = dLatest.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) +
+          ', ' + dLatest.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
       }
 
-      trackingCache[cleanResi] = res;
-      renderModalTracking(res, fallbackLink);
-    });
-  }
+      var statusTagLabel = isDelivered ? 'Terkirim' : (data.statusUtama || 'Dalam Perjalanan');
+      var headlineText = latest.deskripsi || (isDelivered ? 'Paket telah diterima di alamat tujuan' : 'Paket sedang dalam proses pengiriman');
 
-  function renderModalTracking(data, fallbackLink) {
-    var modalBody = document.getElementById('modalBody');
-    var isDelivered = (data.statusUtama || '').toLowerCase().indexOf('deliver') !== -1;
-    var latestCode = (data.riwayat && data.riwayat[0]) ? data.riwayat[0].milestoneCode : 1;
+      var html =
+        // Status State Tag
+        '<div class="mb-2 flex items-center justify-between gap-2">' +
+          '<div class="flex items-center gap-2">' +
+            '<span class="font-mono text-[11px] font-medium uppercase tracking-[0.12em] ' + (isDelivered ? 'text-lotus-delivered' : 'text-lotus-accent') + '">' +
+              escapeHtml(statusTagLabel) +
+            '</span>' +
+            (isDelivered ? '<span class="font-mono text-[11px] font-medium text-lotus-delivered">&bull; Selesai</span>' : '') +
+          '</div>' +
+          '<a href="' + escapeHtml(fallbackLink) + '" target="_blank" rel="noopener" class="font-mono text-[11px] text-lotus-secondary hover:text-lotus-primary underline underline-offset-4">' +
+            'spx.co.id &nearr;' +
+          '</a>' +
+        '</div>' +
 
-    // Tentukan step aktif (1: Dikemas, 5: Dikirim, 6: Diantar, 8: Terkirim)
-    var step = 1;
-    if (isDelivered || latestCode >= 8) step = 4;
-    else if (latestCode >= 6) step = 3;
-    else if (latestCode >= 4) step = 2;
+        // Editorial Status Headline
+        '<h3 class="editorial-heading text-[21px] sm:text-[23px] text-lotus-primary leading-[1.25] mb-2">' +
+          escapeHtml(headlineText) +
+        '</h3>' +
 
-    var doneClass = isDelivered ? ' done' : '';
-    var pillClass = isDelivered ? ' delivered' : '';
+        // Last Updated Meta
+        (latestTimeStr
+          ? '<p class="text-[12.5px] text-lotus-secondary mb-7">Pembaruan terakhir: <span class="font-mono text-[12px] text-lotus-primary">' + latestTimeStr + '</span></p>'
+          : '<div class="mb-6"></div>') +
 
-    var html =
-      '<div class="track-status-row">' +
-        '<span class="track-pill' + pillClass + '">' + escapeHtml(data.statusUtama) + '</span>' +
-        '<a class="ext-link" href="' + escapeHtml(fallbackLink) + '" target="_blank">Buka web SPX &nearr;</a>' +
-      '</div>' +
-      '<div class="milestones">' +
-        '<div class="m-step' + (step >= 1 ? ' active' + doneClass : '') + '"><div class="m-bar"></div><span>Dikemas</span></div>' +
-        '<div class="m-step' + (step >= 2 ? ' active' + doneClass : '') + '"><div class="m-bar"></div><span>Dikirim</span></div>' +
-        '<div class="m-step' + (step >= 3 ? ' active' + doneClass : '') + '"><div class="m-bar"></div><span>Diantar</span></div>' +
-        '<div class="m-step' + (step >= 4 ? ' active' + doneClass : '') + '"><div class="m-bar"></div><span>Terkirim</span></div>' +
-      '</div>';
+        // Borderless Route Progress Visualization (Asal -> Tujuan + Glowing Comet)
+        '<div>' +
+          '<div class="flex items-end justify-between gap-4 mb-2.5">' +
+            '<div>' +
+              '<span class="block font-mono text-[9.5px] uppercase tracking-[0.14em] text-lotus-muted mb-0.5">Asal</span>' +
+              '<p class="text-[15px] font-semibold text-lotus-primary leading-tight">' + escapeHtml(originCity) + '</p>' +
+            '</div>' +
+            '<div class="text-right">' +
+              '<span class="block font-mono text-[9.5px] uppercase tracking-[0.14em] text-lotus-muted mb-0.5">Tujuan</span>' +
+              '<p class="text-[15px] font-semibold text-lotus-primary leading-tight">' + escapeHtml(destinationCity) + '</p>' +
+            '</div>' +
+          '</div>' +
 
-    if (!data.riwayat || data.riwayat.length === 0) {
-      html += '<div class="loader-box">Belum ada riwayat perjalanan tercatat.</div>';
-    } else {
-      html += '<div class="timeline">';
-      data.riwayat.forEach(function (item, idx) {
-        var dt = new Date(item.waktu * 1000);
-        var waktuStr = dt.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) +
-          ' • ' + dt.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        var firstDelivered = (idx === 0 && isDelivered) ? ' delivered' : '';
+          '<div class="route-track-bg relative w-full h-[2px] rounded-full my-2.5">' +
+            '<div style="width: ' + progressPct + '%;" class="route-progress-beam h-full rounded-full transition-all duration-700 ease-out"></div>' +
+            '<span style="left: ' + progressPct + '%;" class="route-comet-dot absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full"></span>' +
+          '</div>' +
 
-        html +=
-          '<div class="t-item' + firstDelivered + '">' +
-            '<div class="t-dot"></div>' +
-            '<div class="t-time">' + waktuStr + '</div>' +
-            '<div class="t-desc">' + escapeHtml(item.deskripsi) + '</div>' +
-            (item.lokasi ? '<div class="t-loc">' + escapeHtml(item.lokasi) + '</div>' : '') +
+          '<div class="flex items-center justify-between gap-3 text-[11.5px] text-lotus-secondary mt-2">' +
+            '<span>' + (isDelivered ? 'Pengiriman selesai dengan bukti tanda terima' : 'Perjalanan paket terpantau real-time') + '</span>' +
+            '<span class="font-mono text-[11.5px] font-medium ' + (isDelivered ? 'text-lotus-delivered' : 'text-lotus-gold') + ' shrink-0">' + progressPct + '%</span>' +
+          '</div>' +
+        '</div>' +
+
+        '<hr class="lotus-divider my-8" />' +
+
+        // Vertical Checkpoint Timeline
+        '<div>' +
+          '<div class="flex items-center justify-between mb-6">' +
+            '<h4 class="font-mono text-[10.5px] font-medium uppercase tracking-[0.15em] text-lotus-secondary">RIWAYAT PERJALANAN</h4>' +
+            '<span class="font-mono text-[11px] text-lotus-muted">' + riwayat.length + ' pembaruan</span>' +
           '</div>';
-      });
+
+      if (riwayat.length === 0) {
+        html += '<p class="text-[13px] text-lotus-secondary py-4">Belum ada riwayat perjalanan tercatat.</p>';
+      } else {
+        html += '<ol class="relative">';
+        riwayat.forEach(function (ev, idx) {
+          var isFirst = idx === 0;
+          var isLast = idx === riwayat.length - 1;
+          var dt = new Date(ev.waktu * 1000);
+          var waktuStr = dt.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }) +
+            ', ' + dt.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+          html +=
+            '<li class="relative flex gap-3.5">' +
+              '<div class="relative flex flex-col items-center w-4 shrink-0">' +
+                (!isLast ? '<span class="timeline-vertical-line absolute top-4 bottom-0 w-[1px]" aria-hidden="true"></span>' : '') +
+                '<div class="relative w-4 h-4 mt-1 flex items-center justify-center">' +
+                  (isFirst
+                    ? '<span class="timeline-active-node w-2.5 h-2.5 rounded-full"></span>'
+                    : '<span class="timeline-past-node w-1.5 h-1.5 rounded-full"></span>') +
+                '</div>' +
+              '</div>' +
+
+              '<div class="' + (isLast ? 'pb-0' : 'pb-6') + ' flex-1 min-w-0">' +
+                '<div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 mb-0.5">' +
+                  '<p class="text-[13.5px] leading-snug ' + (isFirst ? 'font-semibold text-lotus-primary' : 'font-medium text-lotus-primary opacity-85') + '">' +
+                    escapeHtml(ev.deskripsi) +
+                  '</p>' +
+                  '<time class="font-mono text-[11px] shrink-0 ' + (isFirst ? 'text-lotus-gold font-medium' : 'text-lotus-muted') + '">' +
+                    waktuStr +
+                  '</time>' +
+                '</div>' +
+                (ev.lokasi
+                  ? '<p class="text-[12px] text-lotus-secondary mt-0.5">' + escapeHtml(ev.lokasi) + '</p>'
+                  : '') +
+              '</div>' +
+            '</li>';
+        });
+        html += '</ol>';
+      }
+
       html += '</div>';
+      el.drawerBody.innerHTML = html;
     }
 
-    modalBody.innerHTML = html;
-  }
+    function closeTrackDrawer() {
+      el.trackDrawerOverlay.classList.remove('is-open');
+      el.trackDrawerOverlay.setAttribute('aria-hidden', 'true');
+    }
 
-  function closeTrackModal(e) {
-    if (e && e.target !== document.getElementById('trackModal')) return;
-    document.getElementById('trackModal').classList.remove('active');
-  }
+    el.closeDrawerBtn.addEventListener('click', closeTrackDrawer);
+    el.drawerBackdrop.addEventListener('click', closeTrackDrawer);
+    el.drawerCopyBtn.addEventListener('click', function () {
+      if (!activeDrawerResi) return;
+      copyTextToClipboard(activeDrawerResi, 'Nomor resi disalin');
+      el.drawerCopyLabel.textContent = 'Disalin';
+      setTimeout(function () {
+        el.drawerCopyLabel.textContent = 'Salin';
+      }, 1600);
+    });
 
-  function escapeHtml(str) {
-    var div = document.createElement('div');
-    div.textContent = str == null ? '' : str;
-    return div.innerHTML;
-  }
-</script>
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeTrackDrawer();
+    });
+
+    function escapeHtml(str) {
+      var div = document.createElement('div');
+      div.textContent = str == null ? '' : str;
+      return div.innerHTML;
+    }
+  </script>
 </body>
 </html>
