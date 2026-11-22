@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>larba. — Cek Resi Barranetmedia</title>
 
-  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -19,24 +19,10 @@
         extend: {
           fontFamily: {
             sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace'],
           },
         },
       },
     };
-  </script>
-
-  <!-- Early Theme Restoration -->
-  <script>
-    (function () {
-      try {
-        const savedTheme = localStorage.getItem('larba_preview_theme');
-        if (savedTheme === 'light') {
-          document.documentElement.classList.remove('dark');
-          document.documentElement.classList.add('light');
-        }
-      } catch (e) {}
-    })();
   </script>
 
   <style>
@@ -52,6 +38,7 @@
 
       --accent-primary: #8B96F2;
       --accent-secondary: #B78EF5;
+      --accent-purple-dot: #A855F7;
       --accent-gold: #F6C856;
       --accent-gold-ring: rgba(246, 200, 86, 0.34);
       --accent-delivered: #6EE7B7;
@@ -65,26 +52,23 @@
       --route-gradient: linear-gradient(90deg, #7884E8 0%, #B78EF5 55%, #F6C856 100%);
       --route-track: rgba(227, 186, 245, 0.14);
 
-      --hairline: rgba(227, 186, 245, 0.12);
+      --hairline: rgba(227, 186, 245, 0.11);
+      --zebra-alt: rgba(183, 142, 245, 0.045);
+      --zebra-hover: rgba(183, 142, 245, 0.085);
+
       --pill-bg: rgba(255, 255, 255, 0.045);
       --pill-bg-hover: rgba(255, 255, 255, 0.085);
-      --pill-border: rgba(227, 186, 245, 0.15);
+      --pill-border: rgba(227, 186, 245, 0.14);
       --badge-bg: rgba(120, 132, 232, 0.16);
-
-      /* Cardless Alternating Zebra Row Tokens (Dark Mode) */
-      --row-odd-bg: transparent;
-      --row-even-bg: rgba(183, 142, 245, 0.055);
-      --row-hover-bg: rgba(183, 142, 245, 0.10);
 
       --search-line: rgba(227, 186, 245, 0.18);
       --search-focus: #B78EF5;
-      --search-focus-glow: rgba(183, 142, 245, 0.45);
 
       --timeline-line: linear-gradient(180deg, rgba(246, 200, 86, 0.5) 0%, rgba(183, 142, 245, 0.32) 48%, rgba(120, 132, 232, 0.10) 100%);
       --timeline-dot-past: #8B96F2;
 
       --overlay-bg: rgba(6, 4, 13, 0.74);
-      --sheet-bg: linear-gradient(180deg, rgba(23, 18, 48, 0.97) 0%, rgba(12, 9, 24, 0.99) 100%);
+      --sheet-bg: linear-gradient(180deg, rgba(23, 18, 48, 0.96) 0%, rgba(12, 9, 24, 0.99) 100%);
       --sheet-shadow: 0 -20px 60px rgba(6, 4, 13, 0.85);
       --toast-bg: rgba(24, 18, 52, 0.95);
       --toast-shadow: 0 12px 32px rgba(6, 4, 13, 0.72);
@@ -99,6 +83,7 @@
 
       --accent-primary: #5663D1;
       --accent-secondary: #8C63DF;
+      --accent-purple-dot: #7E22CE;
       --accent-gold: #D98A1C;
       --accent-gold-ring: rgba(217, 138, 28, 0.28);
       --accent-delivered: #0D9488;
@@ -112,26 +97,23 @@
       --route-gradient: linear-gradient(90deg, #5663D1 0%, #936CE8 55%, #D98A1C 100%);
       --route-track: rgba(20, 16, 38, 0.09);
 
-      --hairline: rgba(20, 16, 38, 0.09);
-      --pill-bg: rgba(20, 16, 38, 0.035);
-      --pill-bg-hover: rgba(20, 16, 38, 0.075);
-      --pill-border: rgba(20, 16, 38, 0.10);
-      --badge-bg: rgba(86, 99, 209, 0.11);
+      --hairline: rgba(20, 16, 38, 0.08);
+      --zebra-alt: rgba(86, 99, 209, 0.04);
+      --zebra-hover: rgba(86, 99, 209, 0.075);
 
-      /* Cardless Alternating Zebra Row Tokens (Light Mode) */
-      --row-odd-bg: transparent;
-      --row-even-bg: rgba(86, 99, 209, 0.045);
-      --row-hover-bg: rgba(140, 99, 223, 0.085);
+      --pill-bg: rgba(20, 16, 38, 0.035);
+      --pill-bg-hover: rgba(20, 16, 38, 0.07);
+      --pill-border: rgba(20, 16, 38, 0.09);
+      --badge-bg: rgba(86, 99, 209, 0.11);
 
       --search-line: rgba(20, 16, 38, 0.14);
       --search-focus: #5663D1;
-      --search-focus-glow: rgba(86, 99, 209, 0.24);
 
       --timeline-line: linear-gradient(180deg, rgba(217, 138, 28, 0.45) 0%, rgba(140, 99, 223, 0.28) 50%, rgba(86, 99, 209, 0.10) 100%);
       --timeline-dot-past: #8C63DF;
 
-      --overlay-bg: rgba(20, 16, 38, 0.34);
-      --sheet-bg: linear-gradient(180deg, rgba(252, 250, 255, 0.97) 0%, rgba(243, 238, 249, 0.99) 100%);
+      --overlay-bg: rgba(20, 16, 38, 0.32);
+      --sheet-bg: linear-gradient(180deg, rgba(252, 250, 255, 0.96) 0%, rgba(243, 238, 249, 0.99) 100%);
       --sheet-shadow: 0 -18px 50px rgba(20, 16, 38, 0.14);
       --toast-bg: rgba(255, 255, 255, 0.96);
       --toast-shadow: 0 12px 30px rgba(20, 16, 38, 0.12);
@@ -153,23 +135,12 @@
       transition: background-color 0.35s ease, color 0.35s ease;
     }
 
-    .theme-transition {
-      transition:
-        background-color 0.35s ease,
-        color 0.35s ease,
-        border-color 0.35s ease,
-        box-shadow 0.35s ease,
-        opacity 0.35s ease;
-    }
-
-    /* Dual Full-Viewport Atmospheric Canvases (0.35s Cross-Fade) */
     .atmosphere-dark {
       background-color: #0C0918;
       background-image:
         radial-gradient(ellipse 64% 42% at 20% 10%, rgba(111, 124, 230, 0.22) 0%, rgba(111, 124, 230, 0) 76%),
         radial-gradient(ellipse 56% 36% at 55% -4%, rgba(155, 132, 242, 0.16) 0%, rgba(155, 132, 242, 0) 74%),
         radial-gradient(ellipse 48% 32% at 82% 8%, rgba(223, 183, 242, 0.11) 0%, rgba(223, 183, 242, 0) 72%),
-        radial-gradient(circle at 68% 12%, rgba(246, 200, 86, 0.08) 0%, rgba(246, 200, 86, 0) 44%),
         linear-gradient(180deg, #15102B 0%, #0F0B21 40%, #0C0918 100%);
       opacity: 1;
       transition: opacity 0.35s ease;
@@ -184,7 +155,6 @@
       background-image:
         radial-gradient(ellipse 64% 44% at 20% 8%, rgba(111, 124, 230, 0.11) 0%, rgba(111, 124, 230, 0) 76%),
         radial-gradient(ellipse 54% 38% at 78% 6%, rgba(196, 152, 235, 0.15) 0%, rgba(196, 152, 235, 0) 74%),
-        radial-gradient(circle at 64% 12%, rgba(235, 174, 52, 0.09) 0%, rgba(235, 174, 52, 0) 46%),
         linear-gradient(180deg, #F3EEF9 0%, #F7F4FC 42%, #FAF8FD 100%);
       opacity: 0;
       transition: opacity 0.35s ease;
@@ -222,18 +192,17 @@
     .lotus-divider {
       border: 0;
       border-top: 1px solid var(--hairline);
-      transition: border-color 0.35s ease;
     }
 
     .lotus-cta-btn {
       background: var(--cta-gradient);
       color: var(--cta-text);
       box-shadow: var(--cta-shadow);
-      transition: transform 0.18s ease, box-shadow 0.25s ease, filter 0.25s ease, color 0.35s ease;
+      transition: transform 0.18s ease, box-shadow 0.25s ease, filter 0.25s ease;
     }
 
     .lotus-cta-btn:hover {
-      filter: brightness(1.06);
+      filter: brightness(1.05);
       box-shadow: var(--cta-shadow-hover);
     }
 
@@ -241,33 +210,14 @@
       transform: scale(0.97);
     }
 
-    /* Borderless Underline Input & Filter Controls */
+    /* Borderless Search Underline */
     .search-underline {
       border-bottom: 1px solid var(--search-line);
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      transition: border-color 0.3s ease;
     }
 
     .search-underline:focus-within {
       border-bottom-color: var(--search-focus);
-      box-shadow: 0 10px 26px -14px var(--search-focus-glow);
-    }
-
-    /* Cardless Alternating Zebra-Striped Rows (Zero Boxes / Borders) */
-    .resi-row {
-      border-bottom: 1px solid var(--hairline);
-      transition: background-color 0.25s ease;
-    }
-
-    .resi-row-odd {
-      background-color: var(--row-odd-bg);
-    }
-
-    .resi-row-even {
-      background-color: var(--row-even-bg);
-    }
-
-    .resi-row:hover {
-      background-color: var(--row-hover-bg);
     }
 
     input::placeholder,
@@ -276,13 +226,6 @@
       opacity: 0.85;
     }
 
-    input[type="date"]::-webkit-calendar-picker-indicator {
-      filter: invert(0.7);
-      cursor: pointer;
-    }
-    html.light input[type="date"]::-webkit-calendar-picker-indicator {
-      filter: none;
-    }
     select option {
       background-color: #171230;
       color: #F7F5FC;
@@ -292,7 +235,18 @@
       color: #141026;
     }
 
-    /* Radar Dot & Active Node Pulse Animation */
+    /* Cardless Alternating Zebra Rows */
+    .zebra-row {
+      transition: background-color 0.2s ease;
+    }
+    .zebra-row:nth-child(even) {
+      background-color: var(--zebra-alt);
+    }
+    .zebra-row:hover {
+      background-color: var(--zebra-hover);
+    }
+
+    /* Radar Dot Pulse */
     @keyframes goldRadarPulse {
       0%, 100% {
         transform: scale(1);
@@ -307,13 +261,11 @@
     .radar-pulse-dot {
       background-color: var(--accent-gold);
       animation: goldRadarPulse 2.6s ease-in-out infinite;
-      transition: background-color 0.35s ease;
     }
 
-    /* Route Progress Track & Glowing Comet Dot */
+    /* Route Progress Track */
     .route-track-bg {
       background-color: var(--route-track);
-      transition: background-color 0.35s ease;
     }
 
     .route-progress-beam {
@@ -323,10 +275,9 @@
     .route-comet-dot {
       background-color: var(--accent-gold);
       box-shadow: 0 0 10px 2px var(--accent-gold-ring), 0 0 4px 1px var(--accent-gold);
-      transition: left 0.7s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.35s ease, box-shadow 0.35s ease;
     }
 
-    /* Vertical Timeline Line & Pulsing Halo Ring */
+    /* Vertical Timeline */
     .timeline-vertical-line {
       background: var(--timeline-line);
     }
@@ -345,20 +296,18 @@
     .timeline-active-node {
       background-color: var(--accent-gold);
       animation: checkpointHalo 2.5s ease-in-out infinite;
-      transition: background-color 0.35s ease;
     }
 
     .timeline-past-node {
       background-color: var(--timeline-dot-past);
-      transition: background-color 0.35s ease;
     }
 
-    /* Slide-Up / Centered Frosted Bottom Sheet */
+    /* Slide-Up Frosted Bottom Sheet */
     .drawer-overlay {
       background-color: var(--overlay-bg);
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.28s ease, background-color 0.35s ease;
+      transition: opacity 0.28s ease;
     }
 
     .drawer-overlay.is-open {
@@ -368,16 +317,16 @@
 
     .drawer-sheet {
       background: var(--sheet-bg);
-      border: 1px solid var(--pill-border);
+      border-top: 1px solid var(--pill-border);
       box-shadow: var(--sheet-shadow);
       backdrop-filter: blur(22px);
       -webkit-backdrop-filter: blur(22px);
-      transform: translateY(24px) scale(0.98);
-      transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s ease;
+      transform: translateY(100%);
+      transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     .drawer-overlay.is-open .drawer-sheet {
-      transform: translateY(0) scale(1);
+      transform: translateY(0);
     }
 
     /* Floating Toast */
@@ -396,176 +345,157 @@
   <div class="atmosphere-dark fixed inset-0 pointer-events-none z-0" aria-hidden="true"></div>
   <div class="atmosphere-light fixed inset-0 pointer-events-none z-0" aria-hidden="true"></div>
 
-  <!-- Responsive Editorial Container (Cardless Two-Column on Desktop, Single-Column on Mobile) -->
-  <div class="relative z-10 w-full max-w-[1040px] mx-auto px-5 sm:px-8 pt-7 sm:pt-9 pb-24">
+  <!-- Adaptive Container: Single-Column on Mobile, Proportional 2-Column on Desktop -->
+  <div class="relative z-10 w-full max-w-[1040px] mx-auto px-5 sm:px-8 pt-8 pb-24">
 
-    <!-- 1. Minimal Top Header -->
-    <header class="flex items-center justify-between gap-3 pb-7 mb-8 sm:mb-10 border-b border-[var(--hairline)]">
-      <!-- Clean Wordmark ('larba.') with Purple Dot '.' -->
+    <!-- 1. Top Header -->
+    <header class="flex items-center justify-between gap-3 pb-7 mb-9 border-b border-[var(--hairline)]">
+      <!-- Clean Brand Wordmark ('larba.') with Purple Dot -->
       <button
         id="brandResetBtn"
         type="button"
-        class="inline-flex items-baseline focus:outline-none cursor-pointer group"
+        class="inline-flex items-baseline focus:outline-none cursor-pointer"
         aria-label="larba."
       >
-        <span class="editorial-heading text-[26px] sm:text-[28px] text-lotus-primary theme-transition leading-none">larba</span>
-        <span style="color: var(--accent-secondary);" class="editorial-heading text-[28px] sm:text-[30px] theme-transition leading-none">.</span>
+        <span class="editorial-heading text-[26px] text-lotus-primary leading-none">larba</span>
+        <span style="color: var(--accent-purple-dot);" class="editorial-heading text-[28px] leading-none">.</span>
       </button>
 
-      <!-- Right Header Controls: Theme Switcher & Barranetmedia Pill -->
-      <div class="flex items-center gap-2 sm:gap-2.5">
+      <!-- Right Controls: Theme Switcher & Active User Pill -->
+      <div class="flex items-center gap-2.5">
         <button
           id="themeToggleBtn"
           type="button"
-          aria-label="Ganti tema tampilan"
-          class="lotus-pill inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[12px] sm:text-[12.5px] font-medium text-lotus-primary cursor-pointer"
+          class="lotus-pill inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[12px] font-medium text-lotus-primary cursor-pointer"
         >
-          <svg id="iconSun" class="w-3.5 h-3.5 text-lotus-gold shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg id="iconSun" class="w-3.5 h-3.5 text-lotus-gold shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="4"></circle>
-            <path d="M12 2v2"></path>
-            <path d="M12 20v2"></path>
-            <path d="m4.93 4.93 1.41 1.41"></path>
-            <path d="m17.66 17.66 1.41 1.41"></path>
-            <path d="M2 12h2"></path>
-            <path d="M20 12h2"></path>
-            <path d="m6.34 17.66-1.41 1.41"></path>
-            <path d="m19.07 4.93-1.41 1.41"></path>
+            <path d="M12 2v2M12 20v2m-7.07-17.07 1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
           </svg>
-          <svg id="iconMoon" class="hidden w-3.5 h-3.5 text-lotus-accent shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg id="iconMoon" class="hidden w-3.5 h-3.5 text-lotus-accent shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
           </svg>
-          <span id="themeToggleLabel" class="whitespace-nowrap">Mode Terang</span>
+          <span id="themeToggleLabel">Mode Terang</span>
         </button>
 
-        <div class="lotus-pill inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[12px] sm:text-[12.5px] font-medium text-lotus-secondary">
-          <span class="w-1.5 h-1.5 rounded-full bg-[#6EE7B7] shrink-0"></span>
+        <div class="lotus-pill hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[12px] font-medium text-lotus-secondary">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#6EE7B7]"></span>
           <span>Barranetmedia</span>
         </div>
       </div>
     </header>
 
-    <!-- Desktop 2-Column Editorial Layout (Left: Hero + Borderless Search/Filters | Right: Zebra-Striped List) -->
+    <!-- Main 2-Column Desktop Grid (5 Cols Left Controls / 7 Cols Right Cardless Results) -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
 
-      <!-- LEFT COLUMN (5 Cols on Desktop, Sticky) -->
+      <!-- LEFT COLUMN (5 Cols on Desktop): Editorial Title & Borderless Search -->
       <aside class="lg:col-span-5 lg:sticky lg:top-8">
-        <!-- Hero Text -->
-        <div class="mb-8">
-          <div class="lotus-pill inline-flex items-center gap-2 px-3.5 py-1 rounded-full backdrop-blur-md mb-4">
-            <span class="w-1.5 h-1.5 rounded-full radar-pulse-dot shrink-0"></span>
-            <span class="font-sans text-[11.5px] font-semibold tracking-[0.04em] uppercase text-lotus-primary theme-transition">
-              Rahasia Perusahaan
-            </span>
-          </div>
-
-          <h1 class="editorial-heading text-[29px] sm:text-[34px] text-lotus-primary theme-transition mb-2">
-            Cek Resi Barranetmedia
-          </h1>
-
-          <p class="text-[14.5px] leading-relaxed text-lotus-secondary theme-transition">
-            Selamat berjuang, sukses....
-          </p>
+        <!-- Professional Eyebrow Badge -->
+        <div class="lotus-pill inline-flex items-center gap-2 px-3 py-1 rounded-full mb-4">
+          <span class="w-1.5 h-1.5 rounded-full radar-pulse-dot shrink-0"></span>
+          <span class="font-sans text-[11px] font-semibold tracking-[0.06em] uppercase text-lotus-primary">
+            Rahasia Perusahaan
+          </span>
         </div>
 
-        <!-- Strictly Borderless Underline Search & Filters (Zero Boxes) -->
-        <div aria-label="Pencarian dan Filter Resi" class="space-y-5">
-          <!-- Multi-Query Underline Input -->
-          <div>
-            <label for="queryInput" class="block font-sans text-[12px] font-semibold text-lotus-secondary mb-1.5">
-              Cari resi, nama, atau no HP
-            </label>
-            <div class="search-underline flex items-start gap-2 pb-2">
-              <textarea
-                id="queryInput"
-                rows="2"
-                spellcheck="false"
-                placeholder="SPXID069316549624, Budi, 0812..."
-                class="w-full min-w-0 bg-transparent font-sans text-[14.5px] leading-relaxed text-lotus-primary theme-transition focus:outline-none resize-y"
-              ></textarea>
-              <button
-                id="clearInputInlineBtn"
-                type="button"
-                aria-label="Hapus kata kunci"
-                class="text-lotus-secondary hover:text-lotus-primary text-lg leading-none px-1.5 py-0.5 transition-colors cursor-pointer shrink-0"
-              >
-                &times;
-              </button>
-            </div>
-            <p class="text-[11.5px] text-lotus-muted mt-1.5">
-              Pisahkan dengan koma atau baris baru untuk cari banyak sekaligus.
-            </p>
-          </div>
+        <!-- Headline & Subtitle -->
+        <h1 class="editorial-heading text-[28px] sm:text-[32px] text-lotus-primary mb-2">
+          Lacak Resi Barranetmedia
+        </h1>
+        <p class="text-[14px] leading-relaxed text-lotus-secondary mb-7">
+          Selamat berjuang sukses...
+        </p>
 
-          <!-- 4 Borderless Underline Filter Fields -->
-          <div class="grid grid-cols-2 gap-x-5 gap-y-4 pt-1">
-            <div class="search-underline pb-1.5">
-              <label for="csInput" class="block font-sans text-[11px] font-semibold text-lotus-muted mb-1">CS</label>
-              <input
-                type="text"
-                id="csInput"
-                placeholder="Nama CS"
-                class="w-full bg-transparent text-[13.5px] font-medium text-lotus-primary focus:outline-none"
-              />
-            </div>
-
-            <div class="search-underline pb-1.5">
-              <label for="statusInput" class="block font-sans text-[11px] font-semibold text-lotus-muted mb-1">Status</label>
-              <select
-                id="statusInput"
-                class="w-full bg-transparent text-[13.5px] font-medium text-lotus-primary focus:outline-none cursor-pointer"
-              >
-                <option value="">Semua status</option>
-                <option value="ongoing">On going</option>
-                <option value="delivered">Delivered</option>
-                <option value="retur">Retur</option>
-              </select>
-            </div>
-
-            <div class="search-underline pb-1.5">
-              <label for="dateFromInput" class="block font-sans text-[11px] font-semibold text-lotus-muted mb-1">Dari tanggal</label>
-              <input
-                type="date"
-                id="dateFromInput"
-                class="w-full bg-transparent text-[13px] font-medium text-lotus-primary focus:outline-none"
-              />
-            </div>
-
-            <div class="search-underline pb-1.5">
-              <label for="dateToInput" class="block font-sans text-[11px] font-semibold text-lotus-muted mb-1">Sampai tanggal</label>
-              <input
-                type="date"
-                id="dateToInput"
-                class="w-full bg-transparent text-[13px] font-medium text-lotus-primary focus:outline-none"
-              />
-            </div>
-          </div>
-
-          <!-- Action Buttons Row -->
-          <div class="flex flex-wrap items-center gap-2.5 pt-2">
+        <!-- Borderless Multi-Query Search Input -->
+        <div class="search-underline pb-3">
+          <div class="flex items-start gap-2">
+            <textarea
+              id="queryInput"
+              rows="2"
+              spellcheck="false"
+              placeholder="Cari resi, nama, atau no HP (pisahkan koma / baris baru)..."
+              class="w-full min-w-0 bg-transparent font-sans text-[14px] leading-relaxed text-lotus-primary focus:outline-none resize-y"
+            ></textarea>
             <button
-              id="searchBtn"
+              id="clearInputInlineBtn"
               type="button"
-              class="lotus-cta-btn font-bold text-[13px] tracking-[-0.01em] px-5 py-2.5 rounded-full cursor-pointer"
+              aria-label="Hapus kata kunci"
+              class="text-lotus-secondary hover:text-lotus-primary text-lg leading-none px-1.5 py-0.5 transition-colors cursor-pointer shrink-0"
             >
-              Cari Resi
-            </button>
-
-            <button
-              id="todayOngoingBtn"
-              type="button"
-              class="lotus-pill text-[12.5px] font-medium text-lotus-primary px-4 py-2.5 rounded-full cursor-pointer"
-            >
-              Semua ongoing
-            </button>
-
-            <button
-              id="clearBtn"
-              type="button"
-              class="text-[12.5px] font-medium text-lotus-secondary hover:text-lotus-primary px-2.5 py-2 transition-colors cursor-pointer"
-            >
-              Bersihkan
+              &times;
             </button>
           </div>
+        </div>
+
+        <!-- Clean Underline Filter Grid (No Heavy Boxes) -->
+        <div class="grid grid-cols-2 gap-x-5 gap-y-4 mt-5">
+          <div class="search-underline pb-2">
+            <label for="csInput" class="block font-sans text-[11px] font-semibold uppercase tracking-wider text-lotus-muted mb-1">CS</label>
+            <input
+              type="text"
+              id="csInput"
+              placeholder="Semua CS"
+              class="w-full bg-transparent text-[13px] font-medium text-lotus-primary focus:outline-none"
+            />
+          </div>
+
+          <div class="search-underline pb-2">
+            <label for="statusInput" class="block font-sans text-[11px] font-semibold uppercase tracking-wider text-lotus-muted mb-1">Status</label>
+            <select
+              id="statusInput"
+              class="w-full bg-transparent text-[13px] font-medium text-lotus-primary focus:outline-none cursor-pointer"
+            >
+              <option value="">Semua status</option>
+              <option value="ongoing">On going</option>
+              <option value="delivered">Delivered</option>
+              <option value="retur">Retur</option>
+            </select>
+          </div>
+
+          <div class="search-underline pb-2">
+            <label for="dateFromInput" class="block font-sans text-[11px] font-semibold uppercase tracking-wider text-lotus-muted mb-1">Dari Tanggal</label>
+            <input
+              type="date"
+              id="dateFromInput"
+              class="w-full bg-transparent text-[12.5px] font-medium text-lotus-primary focus:outline-none"
+            />
+          </div>
+
+          <div class="search-underline pb-2">
+            <label for="dateToInput" class="block font-sans text-[11px] font-semibold uppercase tracking-wider text-lotus-muted mb-1">Sampai Tanggal</label>
+            <input
+              type="date"
+              id="dateToInput"
+              class="w-full bg-transparent text-[12.5px] font-medium text-lotus-primary focus:outline-none"
+            />
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap items-center gap-2.5 mt-6">
+          <button
+            id="searchBtn"
+            type="button"
+            class="lotus-cta-btn font-bold text-[13px] px-5 py-2.5 rounded-full cursor-pointer"
+          >
+            Cari Resi
+          </button>
+
+          <button
+            id="todayOngoingBtn"
+            type="button"
+            class="lotus-pill text-[12.5px] font-medium text-lotus-primary px-4 py-2.5 rounded-full cursor-pointer"
+          >
+            Semua ongoing
+          </button>
+
+          <button
+            id="clearBtn"
+            type="button"
+            class="text-[12.5px] font-medium text-lotus-secondary hover:text-lotus-primary px-2.5 py-2 transition-colors cursor-pointer"
+          >
+            Bersihkan
+          </button>
         </div>
       </aside>
 
@@ -576,7 +506,7 @@
             Daftar Resi
           </h2>
           <span id="statusLine" class="font-sans text-[12px] font-medium text-lotus-muted">
-            Menampilkan 4 data contoh
+            Siap mencari
           </span>
         </div>
 
@@ -585,36 +515,29 @@
       </main>
 
     </div>
-
   </div>
 
-  <!-- ========================================================================
-       SLIDE-UP / CENTERED FROSTED SHEET ('In-App Live SPX Tracking')
-       ======================================================================== -->
+  <!-- SLIDE-UP FROSTED BOTTOM SHEET ('In-App Live SPX Tracking') -->
   <div
     id="trackDrawerOverlay"
     aria-hidden="true"
-    class="drawer-overlay fixed inset-0 z-50 backdrop-blur-sm flex flex-col justify-end sm:justify-center items-center p-0 sm:p-4"
+    class="drawer-overlay fixed inset-0 z-50 backdrop-blur-sm flex flex-col justify-end items-center"
   >
-    <!-- Clickable Backdrop -->
-    <div id="drawerBackdrop" class="fixed inset-0"></div>
+    <div id="drawerBackdrop" class="w-full flex-1"></div>
 
-    <!-- Frosted Sheet Panel -->
     <div
       role="dialog"
       aria-modal="true"
       aria-label="Detail Perjalanan Paket"
-      class="drawer-sheet relative z-10 w-full max-w-[580px] max-h-[88vh] rounded-t-3xl sm:rounded-3xl px-5 sm:px-6 pt-4 pb-8 sm:pb-9 flex flex-col"
+      class="drawer-sheet w-full max-w-[580px] max-h-[86vh] rounded-t-3xl px-6 pt-4 pb-10 flex flex-col"
     >
-      <!-- Drag Handle (Mobile) -->
-      <div style="background-color: var(--hairline);" class="w-10 h-1 rounded-full mx-auto mb-4 sm:hidden shrink-0"></div>
+      <div style="background-color: var(--hairline);" class="w-10 h-1 rounded-full mx-auto mb-5 shrink-0"></div>
 
-      <!-- Top Bar: Courier + Resi (Plus Jakarta Sans) + Copy + Close -->
       <div style="border-bottom: 1px solid var(--hairline);" class="flex items-center justify-between gap-3 pb-4 shrink-0">
         <div class="inline-flex items-center gap-2 flex-wrap">
           <span class="text-[13px] font-semibold text-lotus-accent">SPX Express</span>
           <span class="text-lotus-muted">&middot;</span>
-          <span id="drawerResiCode" class="font-sans text-[14.5px] font-bold tabular-nums tracking-tight text-lotus-primary">-</span>
+          <span id="drawerResiCode" class="font-sans text-[14px] font-semibold text-lotus-primary tracking-wide">-</span>
           <button
             id="drawerCopyBtn"
             type="button"
@@ -631,18 +554,17 @@
         <button
           id="closeDrawerBtn"
           type="button"
-          class="lotus-pill text-[12px] font-semibold text-lotus-secondary hover:text-lotus-primary px-3.5 py-1.5 rounded-full cursor-pointer"
+          class="lotus-pill text-[12px] font-medium text-lotus-secondary hover:text-lotus-primary px-3 py-1 rounded-full cursor-pointer"
         >
           Tutup
         </button>
       </div>
 
-      <!-- Scrollable Live Tracking Body -->
-      <div id="drawerBody" class="overflow-y-auto pt-5 pr-1"></div>
+      <div id="drawerBody" class="overflow-y-auto pt-6 pr-1"></div>
     </div>
   </div>
 
-  <!-- Subtle Floating Toast Notification -->
+  <!-- Subtle Floating Toast -->
   <div
     id="toastBanner"
     role="status"
@@ -656,143 +578,99 @@
   </div>
 
   <script>
-    /**
-     * larba. — Interactive Visual Preview (Twilight Lotus Dual Theme)
-     */
-
-    // 1. 4 Realistic Pre-Populated Orders for Visual Inspection
-    const SAMPLE_ORDERS = [
+    // Dataset simulasi untuk menguji tampilan saat pengguna melakukan pencarian
+    var SAMPLE_ORDERS = [
       {
         resi: "SPXID069316549624",
         nama: "Budi Santoso",
-        noHp: "081264901122",
-        alamat: "Jl. Pertahanan No. 111, Tembung, Kec. Percut Sei Tuan, Kab. Deli Serdang, Sumatera Utara",
-        produk: "Paket Herbal Propolis 3 Botol",
+        noHp: "081234567890",
+        alamat: "Jl. Pertahanan No. 111, Kec. Percut Sei Tuan, Kab. Deli Serdang, Sumatera Utara",
+        produk: "Paket Herbal Alami Premium (2 Botol)",
         harga: 285000,
         status: "Delivered",
-        statusGroup: "delivered",
         tanggal: "10/04/2026",
-        dateIso: "2026-04-10",
         cs: "Aawan",
         linkResi: "https://spx.co.id/track?SPXID069316549624"
       },
       {
-        resi: "SPXID0492817263",
-        nama: "Raka Pratama",
-        noHp: "085729104488",
-        alamat: "Jl. Pandanaran No. 42, Mugassari, Kec. Semarang Selatan, Kota Semarang, Jawa Tengah",
-        produk: "Madu Hutan Murni 500gr + Ekstrak Temulawak",
+        resi: "SPXID069882341109",
+        nama: "Siti Rahmawati",
+        noHp: "085719283746",
+        alamat: "Perum Graha Padma Blok B2 No. 14, Semarang Barat, Kota Semarang, Jawa Tengah",
+        produk: "Madu Hutan Murni 500gr + Ekstrak Propolis",
         harga: 195000,
         status: "On going",
-        statusGroup: "ongoing",
         tanggal: "21/11/2026",
-        dateIso: "2026-11-21",
-        cs: "Nadia",
-        linkResi: "https://spx.co.id/track?SPXID0492817263"
+        cs: "Rina",
+        linkResi: "https://spx.co.id/track?SPXID069882341109"
       },
       {
-        resi: "SPXID0881920451",
-        nama: "Siti Rahmawati",
-        noHp: "081388402291",
-        alamat: "Jl. Raya Darmo Permai III No. 18, Sukomanunggal, Kota Surabaya, Jawa Timur",
-        produk: "Kapsul Habbatussauda Premium (2 Box)",
-        harga: 240000,
-        status: "Delivered",
-        statusGroup: "delivered",
-        tanggal: "19/11/2026",
-        dateIso: "2026-11-19",
-        cs: "Aawan",
-        linkResi: "https://spx.co.id/track?SPXID0881920451"
-      },
-      {
-        resi: "SPXID0772319842",
+        resi: "SPXID069771209483",
         nama: "Hendra Wijaya",
-        noHp: "082177550913",
-        alamat: "Jl. Gatot Subroto Barat No. 88, Petisah Tengah, Kec. Medan Petisah, Kota Medan",
-        produk: "Paket Bundling Stamina Pria (COD)",
-        harga: 310000,
+        noHp: "081398765432",
+        alamat: "Jl. Kaliurang KM 7.5, Ngaglik, Kabupaten Sleman, DI Yogyakarta",
+        produk: "Paket Bundling Keluarga Sehat (3 Box)",
+        harga: 340000,
+        status: "On going",
+        tanggal: "20/11/2026",
+        cs: "Aawan",
+        linkResi: "https://spx.co.id/track?SPXID069771209483"
+      },
+      {
+        resi: "SPXID069445120987",
+        nama: "Dewi Lestari",
+        noHp: "087811223344",
+        alamat: "Jl. Buah Batu No. 204, Lengkong, Kota Bandung, Jawa Barat",
+        produk: "Kapsul Stamina & Imunitas (1 Botol)",
+        harga: 150000,
         status: "Retur",
-        statusGroup: "retur",
-        tanggal: "17/11/2026",
-        dateIso: "2026-11-17",
-        cs: "Dimas",
-        linkResi: "https://spx.co.id/track?SPXID0772319842"
+        tanggal: "18/11/2026",
+        cs: "Dina",
+        linkResi: "https://spx.co.id/track?SPXID069445120987"
       }
     ];
 
-    // 2. Real SPX Tracking Data for the Interactive Drawer
-    const TRACKING_DETAILS = {
+    var LIVE_TRACKING_DATA = {
       "SPXID069316549624": {
         resi: "SPXID069316549624",
         statusUtama: "Delivered",
-        originCity: "Yogyakarta",
-        destinationCity: "Medan",
-        progressPct: 100,
+        asal: "Yogyakarta",
+        tujuan: "Medan",
+        progress: 100,
         riwayat: [
           { waktu: 1776346536, deskripsi: "Pesanan tiba di alamat tujuan. diterima oleh Lainnya.", lokasi: "Medan Hub" },
           { waktu: 1776322292, deskripsi: "Pesanan dalam proses pengantaran.", lokasi: "Medan Hub" },
           { waktu: 1776317990, deskripsi: "Pesanan diproses di lokasi transit Medan Hub.", lokasi: "Medan Hub" },
           { waktu: 1776315633, deskripsi: "Pesanan dikirim dari lokasi sortir Percut Sei Tuan DC ke Medan Hub.", lokasi: "Percut Sei Tuan DC" },
-          { waktu: 1776287547, deskripsi: "Pesanan diproses di lokasi sortir Percut Sei Tuan DC.", lokasi: "Percut Sei Tuan DC" },
           { waktu: 1776023596, deskripsi: "Pesanan dikirim dari lokasi sortir Kosambi DC ke Percut Sei Tuan DC.", lokasi: "Kosambi DC" },
-          { waktu: 1775878752, deskripsi: "Pesanan diproses di lokasi sortir Kosambi DC.", lokasi: "Kosambi DC" },
-          { waktu: 1775796391, deskripsi: "Pesanan dikirim dari lokasi sortir Yogyakarta DC ke Kosambi DC.", lokasi: "Yogyakarta DC" },
-          { waktu: 1775759030, deskripsi: "Pesanan diproses di lokasi sortir Yogyakarta DC.", lokasi: "Yogyakarta DC" },
-          { waktu: 1775751950, deskripsi: "Pesanan dikirim dari lokasi transit Banguntapan 2 First Mile Hub.", lokasi: "Banguntapan 2 First Mile Hub" },
-          { waktu: 1775742722, deskripsi: "Pesanan tiba di lokasi transit Banguntapan 2 First Mile Hub.", lokasi: "Banguntapan 2 First Mile Hub" },
-          { waktu: 1775726253, deskripsi: "Pesanan telah diserahkan ke jasa kirim untuk diproses.", lokasi: "" }
+          { waktu: 1775796391, deskripsi: "Pesanan dikirim dari lokasi sortir Yogyakarta DC ke Kosambi DC.", lokasi: "Yogyakarta DC" }
         ]
       },
-      "SPXID0492817263": {
-        resi: "SPXID0492817263",
+      "DEFAULT_ONGOING": {
+        resi: "SPXID069882341109",
         statusUtama: "Dalam Perjalanan",
-        originCity: "Yogyakarta",
-        destinationCity: "Semarang",
-        progressPct: 78,
+        asal: "Yogyakarta",
+        tujuan: "Semarang",
+        progress: 78,
         riwayat: [
-          { waktu: 1795315200, deskripsi: "Pesanan dalam proses pengantaran oleh kurir menuju alamat penerima.", lokasi: "Banyumanik Hub" },
-          { waktu: 1795304400, deskripsi: "Pesanan diproses di lokasi transit Banyumanik Hub.", lokasi: "Banyumanik Hub" },
-          { waktu: 1795282800, deskripsi: "Pesanan dikirim dari lokasi sortir Yogyakarta DC ke Semarang DC.", lokasi: "Yogyakarta DC" },
-          { waktu: 1795261200, deskripsi: "Pesanan telah diserahkan ke jasa kirim untuk diproses.", lokasi: "Banguntapan 2 First Mile Hub" }
-        ]
-      },
-      "SPXID0881920451": {
-        resi: "SPXID0881920451",
-        statusUtama: "Delivered",
-        originCity: "Bandung",
-        destinationCity: "Surabaya",
-        progressPct: 100,
-        riwayat: [
-          { waktu: 1795168800, deskripsi: "Pesanan tiba di alamat tujuan. Diterima oleh Yang Bersangkutan.", lokasi: "Sukomanunggal Hub" },
-          { waktu: 1795154400, deskripsi: "Pesanan dalam proses pengantaran.", lokasi: "Sukomanunggal Hub" },
-          { waktu: 1795111200, deskripsi: "Pesanan dikirim dari lokasi sortir Bandung DC ke Surabaya DC.", lokasi: "Bandung DC" }
-        ]
-      },
-      "SPXID0772319842": {
-        resi: "SPXID0772319842",
-        statusUtama: "Retur",
-        originCity: "Jakarta",
-        destinationCity: "Medan",
-        progressPct: 55,
-        riwayat: [
-          { waktu: 1795082400, deskripsi: "Paket sedang dikembalikan ke pengirim setelah 2x percobaan pengantaran.", lokasi: "Medan Petisah Hub" },
-          { waktu: 1795060800, deskripsi: "Pengantaran gagal: Penerima tidak berada di tempat / alamat tidak dapat dihubungi.", lokasi: "Medan Petisah Hub" },
-          { waktu: 1794974400, deskripsi: "Pesanan diproses di lokasi transit Medan Hub.", lokasi: "Medan Hub" }
+          { waktu: 1795324800, deskripsi: "Pesanan sedang dibawa kurir menuju alamat tujuan.", lokasi: "Semarang Barat Hub" },
+          { waktu: 1795314000, deskripsi: "Pesanan diproses di lokasi transit Semarang Hub.", lokasi: "Semarang Hub" },
+          { waktu: 1795285200, deskripsi: "Pesanan dikirim dari lokasi sortir Yogyakarta DC ke Semarang Hub.", lokasi: "Yogyakarta DC" }
         ]
       }
     };
 
     var expandedRows = {};
-    var currentFiltered = SAMPLE_ORDERS.slice();
+    var currentFiltered = [];
     var activeDrawerResi = "";
     var toastTimer = null;
 
     var el = {
-      brandResetBtn: document.getElementById('brandResetBtn'),
       themeToggleBtn: document.getElementById('themeToggleBtn'),
       themeToggleLabel: document.getElementById('themeToggleLabel'),
       iconSun: document.getElementById('iconSun'),
       iconMoon: document.getElementById('iconMoon'),
+      brandResetBtn: document.getElementById('brandResetBtn'),
 
       queryInput: document.getElementById('queryInput'),
       clearInputInlineBtn: document.getElementById('clearInputInlineBtn'),
@@ -819,41 +697,27 @@
       toastText: document.getElementById('toastText')
     };
 
-    /* ========================================================================
-       1. DUAL THEME SWITCHER (Twilight Lotus Dark <-> Morning Lotus Light)
-       ======================================================================== */
-    function syncThemeUI() {
-      var isLight = document.documentElement.classList.contains('light');
-      if (isLight) {
-        el.iconSun.classList.add('hidden');
-        el.iconMoon.classList.remove('hidden');
-        el.themeToggleLabel.textContent = 'Mode Gelap';
-      } else {
-        el.iconMoon.classList.add('hidden');
-        el.iconSun.classList.remove('hidden');
-        el.themeToggleLabel.textContent = 'Mode Terang';
-      }
-    }
-
+    /* Dual Theme Switcher */
     function toggleTheme() {
       var root = document.documentElement;
       var switchingToLight = !root.classList.contains('light');
       if (switchingToLight) {
         root.classList.remove('dark');
         root.classList.add('light');
+        el.iconSun.classList.add('hidden');
+        el.iconMoon.classList.remove('hidden');
+        el.themeToggleLabel.textContent = 'Mode Gelap';
       } else {
         root.classList.remove('light');
         root.classList.add('dark');
+        el.iconMoon.classList.add('hidden');
+        el.iconSun.classList.remove('hidden');
+        el.themeToggleLabel.textContent = 'Mode Terang';
       }
-      try {
-        localStorage.setItem('larba_preview_theme', switchingToLight ? 'light' : 'dark');
-      } catch (e) {}
-      syncThemeUI();
       showToast(switchingToLight ? 'Beralih ke Mode Terang' : 'Beralih ke Mode Gelap');
     }
 
     el.themeToggleBtn.addEventListener('click', toggleTheme);
-    syncThemeUI();
 
     function showToast(message) {
       el.toastText.textContent = message;
@@ -866,7 +730,7 @@
       }, 2200);
     }
 
-    function copyTextToClipboard(text, customToast) {
+    function copyText(text) {
       var temp = document.createElement('textarea');
       temp.value = text;
       temp.setAttribute('readonly', '');
@@ -876,47 +740,35 @@
       temp.select();
       try {
         document.execCommand('copy');
-        showToast(customToast || 'Nomor resi disalin');
+        showToast('Nomor resi disalin');
       } catch (e) {
-        showToast('Gagal menyalin teks');
+        showToast('Gagal menyalin resi');
       }
       document.body.removeChild(temp);
     }
 
-    /* ========================================================================
-       2. INTERACTIVE FILTER & ZEBRA-STRIPED LIST RENDERING
-       ======================================================================== */
-    function getStatusBadgeStyle(group) {
-      if (group === 'delivered') {
-        return {
-          dot: 'var(--accent-delivered)',
-          textClass: 'text-lotus-delivered',
-          pillBg: 'rgba(110, 231, 183, 0.14)',
-          pillBorder: 'rgba(110, 231, 183, 0.3)'
-        };
+    function getStatusMeta(status) {
+      var s = (status || '').toLowerCase();
+      if (s.indexOf('deliver') !== -1) {
+        return { label: status, colorClass: 'text-lotus-delivered', dotColor: 'var(--accent-delivered)' };
       }
-      if (group === 'ongoing') {
-        return {
-          dot: 'var(--accent-gold)',
-          textClass: 'text-lotus-gold',
-          pillBg: 'rgba(246, 200, 86, 0.14)',
-          pillBorder: 'rgba(246, 200, 86, 0.3)'
-        };
+      if (s.indexOf('ongoing') !== -1 || s.indexOf('on going') !== -1) {
+        return { label: status, colorClass: 'text-lotus-gold', dotColor: 'var(--accent-gold)' };
       }
-      if (group === 'retur') {
-        return {
-          dot: 'var(--accent-retur)',
-          textClass: 'text-lotus-retur',
-          pillBg: 'rgba(253, 164, 175, 0.14)',
-          pillBorder: 'rgba(253, 164, 175, 0.3)'
-        };
+      if (s.indexOf('retur') !== -1) {
+        return { label: status, colorClass: 'text-lotus-retur', dotColor: 'var(--accent-retur)' };
       }
-      return {
-        dot: 'var(--accent-primary)',
-        textClass: 'text-lotus-accent',
-        pillBg: 'var(--badge-bg)',
-        pillBorder: 'var(--pill-border)'
-      };
+      return { label: status, colorClass: 'text-lotus-accent', dotColor: 'var(--accent-primary)' };
+    }
+
+    function renderInitialEmptyState() {
+      currentFiltered = [];
+      el.statusLine.textContent = 'Siap mencari';
+      el.resultsArea.innerHTML =
+        '<div class="py-16 px-4 text-center">' +
+          '<p class="text-[14px] font-semibold text-lotus-primary">Belum ada data resi ditampilkan</p>' +
+          '<p class="text-[12.5px] text-lotus-muted mt-1">Masukkan nomor resi, nama pelanggan, atau no HP lalu tekan Cari Resi.</p>' +
+        '</div>';
     }
 
     function filterOrders() {
@@ -927,20 +779,29 @@
       var dFrom = el.dateFromInput.value;
       var dTo = el.dateToInput.value;
 
+      if (terms.length === 0 && !cs && !st && !dFrom && !dTo) {
+        renderInitialEmptyState();
+        return;
+      }
+
       currentFiltered = SAMPLE_ORDERS.filter(function (item) {
-        var matchQ = terms.length === 0 || terms.some(function (term) {
-          return item.resi.toLowerCase().indexOf(term) !== -1 ||
-            item.nama.toLowerCase().indexOf(term) !== -1 ||
-            item.noHp.toLowerCase().indexOf(term) !== -1;
-        });
-        var matchCs = !cs || item.cs.toLowerCase().indexOf(cs) !== -1;
-        var matchSt = !st || item.statusGroup === st;
-        var matchFrom = !dFrom || item.dateIso >= dFrom;
-        var matchTo = !dTo || item.dateIso <= dTo;
-        return matchQ && matchCs && matchSt && matchFrom && matchTo;
+        if (terms.length > 0) {
+          var matchTerm = terms.some(function (t) {
+            return item.resi.toLowerCase().includes(t) ||
+                   item.nama.toLowerCase().includes(t) ||
+                   item.noHp.toLowerCase().includes(t);
+          });
+          if (!matchTerm) return false;
+        }
+        if (cs && !item.cs.toLowerCase().includes(cs)) return false;
+        if (st) {
+          var itemSt = item.status.toLowerCase().replace(/\s+/g, '');
+          if (itemSt.indexOf(st) === -1) return false;
+        }
+        return true;
       });
 
-      el.statusLine.textContent = 'Menampilkan ' + currentFiltered.length + ' hasil';
+      el.statusLine.textContent = currentFiltered.length + ' hasil ditemukan';
       renderRows(currentFiltered);
     }
 
@@ -954,69 +815,66 @@
         el.resultsArea.innerHTML =
           '<div class="py-14 px-4 text-center">' +
             '<p class="text-[14.5px] font-semibold text-lotus-primary">Tidak ada resi yang cocok</p>' +
-            '<p class="text-[12.5px] text-lotus-secondary mt-1">Klik "Bersihkan" untuk menampilkan kembali semua data contoh.</p>' +
+            '<p class="text-[12.5px] text-lotus-secondary mt-1">Klik "Bersihkan" untuk mengatur ulang pencarian.</p>' +
           '</div>';
         return;
       }
 
-      var html = list.map(function (item, index) {
-        var zebraClass = (index % 2 === 0) ? 'resi-row-odd' : 'resi-row-even';
-        var st = getStatusBadgeStyle(item.statusGroup);
+      el.resultsArea.innerHTML = list.map(function (item) {
+        var meta = getStatusMeta(item.status);
         var isOpen = !!expandedRows[item.resi];
         var hargaFmt = 'Rp' + Number(item.harga).toLocaleString('id-ID');
 
         return (
-          '<article class="resi-row ' + zebraClass + ' px-3.5 sm:px-5 py-4 sm:py-5">' +
-            '<!-- Top Row: Resi (Plus Jakarta Sans) + Status + Tanggal & CS -->' +
+          '<article class="zebra-row px-3.5 sm:px-4 py-4 rounded-lg">' +
+            // Row 1: Resi (Plus Jakarta Sans) + Status + Tanggal/CS
             '<div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">' +
-              '<div class="inline-flex items-center gap-2.5 flex-wrap">' +
-                '<button type="button" onclick="copyTextToClipboard(\'' + item.resi + '\')" class="font-sans text-[15px] sm:text-[15.5px] font-bold tabular-nums tracking-tight text-lotus-primary hover:text-lotus-accent transition-colors cursor-pointer text-left" title="Salin nomor resi">' +
+              '<div class="inline-flex items-center gap-2 flex-wrap">' +
+                '<span style="background-color:' + meta.dotColor + ';" class="w-1.5 h-1.5 rounded-full shrink-0"></span>' +
+                '<button type="button" onclick="copyText(\'' + item.resi + '\')" class="font-sans text-[14.5px] font-bold tracking-[0.02em] text-lotus-primary hover:text-lotus-accent transition-colors cursor-pointer" title="Salin resi">' +
                   escapeHtml(item.resi) +
                 '</button>' +
-                '<span style="background-color:' + st.pillBg + '; border-color:' + st.pillBorder + ';" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-[11px] font-semibold ' + st.textClass + '">' +
-                  '<span style="background-color:' + st.dot + ';" class="w-1.5 h-1.5 rounded-full"></span>' +
-                  '<span>' + escapeHtml(item.status) + '</span>' +
+                '<span class="text-lotus-muted">&middot;</span>' +
+                '<span class="font-sans text-[11.5px] font-semibold uppercase tracking-wide ' + meta.colorClass + '">' +
+                  escapeHtml(meta.label) +
                 '</span>' +
               '</div>' +
 
-              '<div class="text-[12px] text-lotus-muted">' +
-                escapeHtml(item.tanggal) + ' <span class="mx-1">&middot;</span> CS ' + escapeHtml(item.cs) +
+              '<div class="font-sans text-[12px] text-lotus-secondary">' +
+                escapeHtml(item.tanggal) + ' <span class="text-lotus-muted">&middot;</span> CS ' + escapeHtml(item.cs) +
               '</div>' +
             '</div>' +
 
-            '<!-- Second Row: Nama, No HP & Harga -->' +
+            // Row 2: Nama + No HP + Harga
             '<div class="flex flex-wrap items-baseline justify-between gap-2 mb-1">' +
               '<p class="text-[14px] font-semibold text-lotus-primary">' +
                 escapeHtml(item.nama) +
-                ' <span class="font-normal text-[13px] text-lotus-secondary">&middot; ' + escapeHtml(item.noHp) + '</span>' +
+                ' <span class="font-sans text-[12.5px] font-normal text-lotus-secondary">&middot; ' + escapeHtml(item.noHp) + '</span>' +
               '</p>' +
-              '<span class="font-sans text-[13.5px] font-semibold tabular-nums text-lotus-gold">' + hargaFmt + '</span>' +
+              '<span class="font-sans text-[13px] font-semibold text-lotus-gold">' + hargaFmt + '</span>' +
             '</div>' +
 
-            '<!-- Third Row: Produk & Alamat (Collapsible) -->' +
-            '<p class="text-[13px] text-lotus-secondary ' + (isOpen ? 'leading-relaxed' : 'truncate') + '">' +
-              escapeHtml(item.produk) +
-              (isOpen ? ' <span class="text-lotus-muted">&mdash;</span> ' + escapeHtml(item.alamat) : '') +
+            // Row 3: Produk & Alamat
+            '<p class="text-[13px] text-lotus-secondary leading-relaxed ' + (isOpen ? '' : 'truncate') + '">' +
+              escapeHtml(item.produk) + ' <span class="text-lotus-muted">&mdash;</span> ' + escapeHtml(item.alamat) +
             '</p>' +
 
-            '<!-- Fourth Row: Action Buttons -->' +
-            '<div class="flex flex-wrap items-center justify-between gap-2 pt-3">' +
-              '<div class="flex flex-wrap items-center gap-2">' +
+            // Row 4: Action Links
+            '<div class="flex items-center justify-between gap-3 mt-3">' +
+              '<div class="flex items-center gap-2 flex-wrap">' +
                 '<button type="button" onclick="openLiveTrack(\'' + item.resi + '\')" class="lotus-pill inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[12px] font-semibold text-lotus-accent hover:text-lotus-primary cursor-pointer">' +
                   '<span class="w-1.5 h-1.5 rounded-full radar-pulse-dot"></span>' +
                   '<span>Lacak Paket</span>' +
                 '</button>' +
-
-                '<button type="button" onclick="showToast(\'Membuka template WhatsApp untuk ' + escapeHtml(item.nama) + '\')" class="lotus-pill inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[12px] font-medium text-lotus-delivered cursor-pointer">' +
+                '<button type="button" onclick="showToast(\'Membuka WhatsApp ke ' + escapeHtml(item.nama) + '\')" class="lotus-pill inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[12px] font-medium text-lotus-delivered cursor-pointer">' +
                   '<span>WhatsApp</span>' +
                 '</button>' +
-
-                '<button type="button" onclick="copyTextToClipboard(\'' + item.resi + '\')" class="text-[12px] font-medium text-lotus-secondary hover:text-lotus-primary px-2 py-1 transition-colors cursor-pointer">' +
+                '<button type="button" onclick="copyText(\'' + item.resi + '\')" class="text-[12px] font-medium text-lotus-secondary hover:text-lotus-primary px-2 py-1 transition-colors cursor-pointer">' +
                   'Salin' +
                 '</button>' +
               '</div>' +
 
-              '<button type="button" onclick="toggleRowDetail(\'' + item.resi + '\')" class="inline-flex items-center gap-1 text-[12px] font-medium text-lotus-muted hover:text-lotus-primary transition-colors cursor-pointer">' +
+              '<button type="button" onclick="toggleRowDetail(\'' + item.resi + '\')" class="inline-flex items-center gap-1 text-[11.5px] font-medium text-lotus-muted hover:text-lotus-primary transition-colors cursor-pointer">' +
                 '<span>' + (isOpen ? 'Ringkas' : 'Detail') + '</span>' +
                 '<svg class="w-3.5 h-3.5 transition-transform duration-150 ' + (isOpen ? 'rotate-180' : '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>' +
               '</button>' +
@@ -1024,73 +882,55 @@
           '</article>'
         );
       }).join('');
-
-      el.resultsArea.innerHTML = html;
     }
 
-    /* ========================================================================
-       3. INTERACTIVE IN-APP LIVE TRACKING DRAWER / MODAL
-       ======================================================================== */
+    /* Live SPX Tracking Bottom Sheet */
     function openLiveTrack(resi) {
-      var data = TRACKING_DETAILS[resi] || TRACKING_DETAILS["SPXID069316549624"];
-      activeDrawerResi = data.resi;
-      el.drawerResiCode.textContent = data.resi;
+      activeDrawerResi = resi;
+      el.drawerResiCode.textContent = resi;
       el.drawerCopyLabel.textContent = 'Salin';
+      el.trackDrawerOverlay.classList.add('is-open');
+      el.trackDrawerOverlay.setAttribute('aria-hidden', 'false');
 
-      var riwayat = data.riwayat || [];
-      var isDelivered = data.statusUtama.toLowerCase() === 'delivered';
-      var isRetur = data.statusUtama.toLowerCase() === 'retur';
-      var latest = riwayat[0] || {};
-
-      var latestTimeStr = '';
-      if (latest.waktu) {
-        var dLatest = new Date(latest.waktu * 1000);
-        latestTimeStr = dLatest.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) +
-          ', ' + dLatest.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
-      }
-
-      var statusColorClass = isDelivered ? 'text-lotus-delivered' : (isRetur ? 'text-lotus-retur' : 'text-lotus-accent');
+      var track = LIVE_TRACKING_DATA[resi] || Object.assign({}, LIVE_TRACKING_DATA["DEFAULT_ONGOING"], { resi: resi });
+      var isDelivered = track.statusUtama === "Delivered";
+      var latest = track.riwayat[0];
 
       var html =
         '<div class="mb-2 flex items-center justify-between gap-2">' +
           '<div class="flex items-center gap-2">' +
-            '<span class="font-sans text-[11.5px] font-bold uppercase tracking-[0.08em] ' + statusColorClass + '">' +
-              escapeHtml(data.statusUtama) +
+            '<span class="font-sans text-[11.5px] font-semibold uppercase tracking-wider ' + (isDelivered ? 'text-lotus-delivered' : 'text-lotus-accent') + '">' +
+              escapeHtml(track.statusUtama) +
             '</span>' +
-            (isDelivered ? '<span class="text-[11.5px] font-semibold text-lotus-delivered">&bull; Selesai</span>' : '') +
+            (isDelivered ? '<span class="font-sans text-[11.5px] font-semibold text-lotus-delivered">&bull; Selesai</span>' : '') +
           '</div>' +
-          '<span class="font-mono text-[11px] text-lotus-muted">In-App Live View</span>' +
+          '<span class="font-sans text-[11.5px] text-lotus-muted">In-App Live SPX</span>' +
         '</div>' +
 
-        '<h3 class="editorial-heading text-[20px] sm:text-[22px] text-lotus-primary leading-[1.28] mb-2">' +
-          escapeHtml(latest.deskripsi || '') +
+        '<h3 class="editorial-heading text-[21px] sm:text-[23px] text-lotus-primary leading-[1.25] mb-6">' +
+          escapeHtml(latest.deskripsi) +
         '</h3>' +
 
-        (latestTimeStr
-          ? '<p class="text-[12.5px] text-lotus-secondary mb-6">Pembaruan terakhir: <span class="font-mono text-[12px] text-lotus-primary">' + latestTimeStr + '</span></p>'
-          : '') +
-
-        '<!-- 2px Route Progress Bar with Glowing Gold Comet Indicator -->' +
-        '<div class="mb-2">' +
-          '<div class="flex items-end justify-between gap-4 mb-2">' +
+        '<div>' +
+          '<div class="flex items-end justify-between gap-4 mb-2.5">' +
             '<div>' +
-              '<span class="block text-[10px] font-semibold uppercase tracking-[0.12em] text-lotus-muted mb-0.5">Asal</span>' +
-              '<p class="text-[15px] font-bold text-lotus-primary leading-tight">' + escapeHtml(data.originCity) + '</p>' +
+              '<span class="block font-sans text-[10px] font-semibold uppercase tracking-wider text-lotus-muted mb-0.5">Asal</span>' +
+              '<p class="text-[15px] font-semibold text-lotus-primary leading-tight">' + escapeHtml(track.asal) + '</p>' +
             '</div>' +
             '<div class="text-right">' +
-              '<span class="block text-[10px] font-semibold uppercase tracking-[0.12em] text-lotus-muted mb-0.5">Tujuan</span>' +
-              '<p class="text-[15px] font-bold text-lotus-primary leading-tight">' + escapeHtml(data.destinationCity) + '</p>' +
+              '<span class="block font-sans text-[10px] font-semibold uppercase tracking-wider text-lotus-muted mb-0.5">Tujuan</span>' +
+              '<p class="text-[15px] font-semibold text-lotus-primary leading-tight">' + escapeHtml(track.tujuan) + '</p>' +
             '</div>' +
           '</div>' +
 
           '<div class="route-track-bg relative w-full h-[2px] rounded-full my-2.5">' +
-            '<div style="width: ' + data.progressPct + '%;" class="route-progress-beam h-full rounded-full"></div>' +
-            '<span style="left: ' + data.progressPct + '%;" class="route-comet-dot absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full"></span>' +
+            '<div style="width:' + track.progress + '%;" class="route-progress-beam h-full rounded-full"></div>' +
+            '<span style="left:' + track.progress + '%;" class="route-comet-dot absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full"></span>' +
           '</div>' +
 
           '<div class="flex items-center justify-between gap-3 text-[11.5px] text-lotus-secondary mt-2">' +
-            '<span>' + (isDelivered ? 'Pengiriman selesai dengan bukti tanda terima' : 'Perjalanan paket terpantau langsung') + '</span>' +
-            '<span class="font-mono text-[11.5px] font-semibold ' + (isDelivered ? 'text-lotus-delivered' : 'text-lotus-gold') + '">' + data.progressPct + '%</span>' +
+            '<span>' + (isDelivered ? 'Pengiriman selesai diterima' : 'Perjalanan paket terpantau real-time') + '</span>' +
+            '<span class="font-sans text-[11.5px] font-semibold ' + (isDelivered ? 'text-lotus-delivered' : 'text-lotus-gold') + '">' + track.progress + '%</span>' +
           '</div>' +
         '</div>' +
 
@@ -1098,14 +938,14 @@
 
         '<div>' +
           '<div class="flex items-center justify-between mb-5">' +
-            '<h4 class="text-[11px] font-bold uppercase tracking-[0.12em] text-lotus-secondary">Riwayat Perjalanan</h4>' +
-            '<span class="font-mono text-[11px] text-lotus-muted">' + riwayat.length + ' pembaruan</span>' +
+            '<h4 class="font-sans text-[11px] font-semibold uppercase tracking-[0.08em] text-lotus-secondary">Riwayat Perjalanan</h4>' +
+            '<span class="font-sans text-[11.5px] text-lotus-muted">' + track.riwayat.length + ' pembaruan</span>' +
           '</div>' +
           '<ol class="relative">';
 
-      riwayat.forEach(function (ev, idx) {
+      track.riwayat.forEach(function (ev, idx) {
         var isFirst = idx === 0;
-        var isLast = idx === riwayat.length - 1;
+        var isLast = idx === track.riwayat.length - 1;
         var dt = new Date(ev.waktu * 1000);
         var waktuStr = dt.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }) +
           ', ' + dt.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
@@ -1113,35 +953,29 @@
         html +=
           '<li class="relative flex gap-3.5">' +
             '<div class="relative flex flex-col items-center w-4 shrink-0">' +
-              (!isLast ? '<span class="timeline-vertical-line absolute top-4 bottom-0 w-[1px]" aria-hidden="true"></span>' : '') +
+              (!isLast ? '<span class="timeline-vertical-line absolute top-4 bottom-0 w-[1px]"></span>' : '') +
               '<div class="relative w-4 h-4 mt-1 flex items-center justify-center">' +
                 (isFirst
                   ? '<span class="timeline-active-node w-2.5 h-2.5 rounded-full"></span>'
                   : '<span class="timeline-past-node w-1.5 h-1.5 rounded-full"></span>') +
               '</div>' +
             '</div>' +
-
-            '<div class="' + (isLast ? 'pb-0' : 'pb-5') + ' flex-1 min-w-0">' +
+            '<div class="' + (isLast ? 'pb-0' : 'pb-6') + ' flex-1 min-w-0">' +
               '<div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 mb-0.5">' +
                 '<p class="text-[13.5px] leading-snug ' + (isFirst ? 'font-semibold text-lotus-primary' : 'font-medium text-lotus-primary opacity-85') + '">' +
                   escapeHtml(ev.deskripsi) +
                 '</p>' +
-                '<time class="font-mono text-[11px] shrink-0 ' + (isFirst ? 'text-lotus-gold font-medium' : 'text-lotus-muted') + '">' +
+                '<time class="font-sans text-[11.5px] shrink-0 ' + (isFirst ? 'text-lotus-gold font-semibold' : 'text-lotus-muted') + '">' +
                   waktuStr +
                 '</time>' +
               '</div>' +
-              (ev.lokasi
-                ? '<p class="text-[12px] text-lotus-secondary mt-0.5">' + escapeHtml(ev.lokasi) + '</p>'
-                : '') +
+              (ev.lokasi ? '<p class="text-[12px] text-lotus-secondary mt-0.5">' + escapeHtml(ev.lokasi) + '</p>' : '') +
             '</div>' +
           '</li>';
       });
 
       html += '</ol></div>';
       el.drawerBody.innerHTML = html;
-
-      el.trackDrawerOverlay.classList.add('is-open');
-      el.trackDrawerOverlay.setAttribute('aria-hidden', 'false');
     }
 
     function closeTrackDrawer() {
@@ -1149,15 +983,7 @@
       el.trackDrawerOverlay.setAttribute('aria-hidden', 'true');
     }
 
-    // Event Listeners
     el.searchBtn.addEventListener('click', filterOrders);
-    el.queryInput.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) filterOrders();
-    });
-    el.statusInput.addEventListener('change', filterOrders);
-    el.dateFromInput.addEventListener('change', filterOrders);
-    el.dateToInput.addEventListener('change', filterOrders);
-
     el.todayOngoingBtn.addEventListener('click', function () {
       el.queryInput.value = '';
       el.csInput.value = '';
@@ -1166,22 +992,18 @@
       el.dateToInput.value = '';
       filterOrders();
     });
-
     el.clearBtn.addEventListener('click', function () {
       el.queryInput.value = '';
       el.csInput.value = '';
       el.statusInput.value = '';
       el.dateFromInput.value = '';
       el.dateToInput.value = '';
-      filterOrders();
+      renderInitialEmptyState();
     });
-
     el.clearInputInlineBtn.addEventListener('click', function () {
       el.queryInput.value = '';
-      filterOrders();
       el.queryInput.focus();
     });
-
     el.brandResetBtn.addEventListener('click', function () {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
@@ -1190,11 +1012,9 @@
     el.drawerBackdrop.addEventListener('click', closeTrackDrawer);
     el.drawerCopyBtn.addEventListener('click', function () {
       if (!activeDrawerResi) return;
-      copyTextToClipboard(activeDrawerResi, 'Nomor resi disalin');
+      copyText(activeDrawerResi);
       el.drawerCopyLabel.textContent = 'Disalin';
-      setTimeout(function () {
-        el.drawerCopyLabel.textContent = 'Salin';
-      }, 1600);
+      setTimeout(function () { el.drawerCopyLabel.textContent = 'Salin'; }, 1600);
     });
 
     document.addEventListener('keydown', function (e) {
@@ -1207,8 +1027,8 @@
       return div.innerHTML;
     }
 
-    // Initialize Preview
-    renderRows(SAMPLE_ORDERS);
+    // Initialize Clean Empty State
+    renderInitialEmptyState();
   </script>
 </body>
 </html>
