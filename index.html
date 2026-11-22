@@ -3,11 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>larba. — Pelacakan &amp; Cek Resi SPX</title>
-  <link rel="icon" type="image/png" href="favicon.png" />
-
-  <!-- Google Identity Services -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <title>larba. — Cek Resi Barranetmedia</title>
 
   <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -34,7 +30,7 @@
   <script>
     (function () {
       try {
-        const savedTheme = localStorage.getItem('larba_theme_mode');
+        const savedTheme = localStorage.getItem('larba_preview_theme');
         if (savedTheme === 'light') {
           document.documentElement.classList.remove('dark');
           document.documentElement.classList.add('light');
@@ -69,11 +65,16 @@
       --route-gradient: linear-gradient(90deg, #7884E8 0%, #B78EF5 55%, #F6C856 100%);
       --route-track: rgba(227, 186, 245, 0.14);
 
-      --hairline: rgba(227, 186, 245, 0.11);
+      --hairline: rgba(227, 186, 245, 0.12);
       --pill-bg: rgba(255, 255, 255, 0.045);
       --pill-bg-hover: rgba(255, 255, 255, 0.085);
-      --pill-border: rgba(227, 186, 245, 0.14);
+      --pill-border: rgba(227, 186, 245, 0.15);
       --badge-bg: rgba(120, 132, 232, 0.16);
+
+      /* Cardless Alternating Zebra Row Tokens (Dark Mode) */
+      --row-odd-bg: transparent;
+      --row-even-bg: rgba(183, 142, 245, 0.055);
+      --row-hover-bg: rgba(183, 142, 245, 0.10);
 
       --search-line: rgba(227, 186, 245, 0.18);
       --search-focus: #B78EF5;
@@ -82,11 +83,8 @@
       --timeline-line: linear-gradient(180deg, rgba(246, 200, 86, 0.5) 0%, rgba(183, 142, 245, 0.32) 48%, rgba(120, 132, 232, 0.10) 100%);
       --timeline-dot-past: #8B96F2;
 
-      --shimmer-base: rgba(227, 186, 245, 0.05);
-      --shimmer-highlight: rgba(183, 142, 245, 0.14);
-
       --overlay-bg: rgba(6, 4, 13, 0.74);
-      --sheet-bg: linear-gradient(180deg, rgba(23, 18, 48, 0.96) 0%, rgba(12, 9, 24, 0.99) 100%);
+      --sheet-bg: linear-gradient(180deg, rgba(23, 18, 48, 0.97) 0%, rgba(12, 9, 24, 0.99) 100%);
       --sheet-shadow: 0 -20px 60px rgba(6, 4, 13, 0.85);
       --toast-bg: rgba(24, 18, 52, 0.95);
       --toast-shadow: 0 12px 32px rgba(6, 4, 13, 0.72);
@@ -114,11 +112,16 @@
       --route-gradient: linear-gradient(90deg, #5663D1 0%, #936CE8 55%, #D98A1C 100%);
       --route-track: rgba(20, 16, 38, 0.09);
 
-      --hairline: rgba(20, 16, 38, 0.08);
+      --hairline: rgba(20, 16, 38, 0.09);
       --pill-bg: rgba(20, 16, 38, 0.035);
-      --pill-bg-hover: rgba(20, 16, 38, 0.07);
-      --pill-border: rgba(20, 16, 38, 0.09);
+      --pill-bg-hover: rgba(20, 16, 38, 0.075);
+      --pill-border: rgba(20, 16, 38, 0.10);
       --badge-bg: rgba(86, 99, 209, 0.11);
+
+      /* Cardless Alternating Zebra Row Tokens (Light Mode) */
+      --row-odd-bg: transparent;
+      --row-even-bg: rgba(86, 99, 209, 0.045);
+      --row-hover-bg: rgba(140, 99, 223, 0.085);
 
       --search-line: rgba(20, 16, 38, 0.14);
       --search-focus: #5663D1;
@@ -127,11 +130,8 @@
       --timeline-line: linear-gradient(180deg, rgba(217, 138, 28, 0.45) 0%, rgba(140, 99, 223, 0.28) 50%, rgba(86, 99, 209, 0.10) 100%);
       --timeline-dot-past: #8C63DF;
 
-      --shimmer-base: rgba(20, 16, 38, 0.045);
-      --shimmer-highlight: rgba(86, 99, 209, 0.11);
-
-      --overlay-bg: rgba(20, 16, 38, 0.32);
-      --sheet-bg: linear-gradient(180deg, rgba(252, 250, 255, 0.96) 0%, rgba(243, 238, 249, 0.99) 100%);
+      --overlay-bg: rgba(20, 16, 38, 0.34);
+      --sheet-bg: linear-gradient(180deg, rgba(252, 250, 255, 0.97) 0%, rgba(243, 238, 249, 0.99) 100%);
       --sheet-shadow: 0 -18px 50px rgba(20, 16, 38, 0.14);
       --toast-bg: rgba(255, 255, 255, 0.96);
       --toast-shadow: 0 12px 30px rgba(20, 16, 38, 0.12);
@@ -162,7 +162,7 @@
         opacity 0.35s ease;
     }
 
-    /* Dual Full-Viewport Atmospheric Canvases */
+    /* Dual Full-Viewport Atmospheric Canvases (0.35s Cross-Fade) */
     .atmosphere-dark {
       background-color: #0C0918;
       background-image:
@@ -232,22 +232,16 @@
       transition: transform 0.18s ease, box-shadow 0.25s ease, filter 0.25s ease, color 0.35s ease;
     }
 
-    .lotus-cta-btn:hover:not(:disabled) {
-      filter: brightness(1.05);
+    .lotus-cta-btn:hover {
+      filter: brightness(1.06);
       box-shadow: var(--cta-shadow-hover);
     }
 
-    .lotus-cta-btn:active:not(:disabled) {
+    .lotus-cta-btn:active {
       transform: scale(0.97);
     }
 
-    .lotus-cta-btn:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
-
-    /* Borderless Search Underline with Focus Illumination */
+    /* Borderless Underline Input & Filter Controls */
     .search-underline {
       border-bottom: 1px solid var(--search-line);
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -258,13 +252,30 @@
       box-shadow: 0 10px 26px -14px var(--search-focus-glow);
     }
 
+    /* Cardless Alternating Zebra-Striped Rows (Zero Boxes / Borders) */
+    .resi-row {
+      border-bottom: 1px solid var(--hairline);
+      transition: background-color 0.25s ease;
+    }
+
+    .resi-row-odd {
+      background-color: var(--row-odd-bg);
+    }
+
+    .resi-row-even {
+      background-color: var(--row-even-bg);
+    }
+
+    .resi-row:hover {
+      background-color: var(--row-hover-bg);
+    }
+
     input::placeholder,
     textarea::placeholder {
       color: var(--text-muted);
       opacity: 0.85;
     }
 
-    /* Custom date & select styling */
     input[type="date"]::-webkit-calendar-picker-indicator {
       filter: invert(0.7);
       cursor: pointer;
@@ -315,7 +326,7 @@
       transition: left 0.7s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.35s ease, box-shadow 0.35s ease;
     }
 
-    /* Vertical Timeline Line & Pulsing Halo Ring on Newest Checkpoint */
+    /* Vertical Timeline Line & Pulsing Halo Ring */
     .timeline-vertical-line {
       background: var(--timeline-line);
     }
@@ -342,24 +353,7 @@
       transition: background-color 0.35s ease;
     }
 
-    /* Lightweight Shimmer State */
-    @keyframes lotusShimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-
-    .shimmer-bar {
-      background: linear-gradient(
-        90deg,
-        var(--shimmer-base) 25%,
-        var(--shimmer-highlight) 50%,
-        var(--shimmer-base) 75%
-      );
-      background-size: 200% 100%;
-      animation: lotusShimmer 1.1s ease-in-out infinite;
-    }
-
-    /* Slide-Up Frosted Bottom Sheet */
+    /* Slide-Up / Centered Frosted Bottom Sheet */
     .drawer-overlay {
       background-color: var(--overlay-bg);
       opacity: 0;
@@ -374,16 +368,16 @@
 
     .drawer-sheet {
       background: var(--sheet-bg);
-      border-top: 1px solid var(--pill-border);
+      border: 1px solid var(--pill-border);
       box-shadow: var(--sheet-shadow);
       backdrop-filter: blur(22px);
       -webkit-backdrop-filter: blur(22px);
-      transform: translateY(100%);
+      transform: translateY(24px) scale(0.98);
       transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s ease;
     }
 
     .drawer-overlay.is-open .drawer-sheet {
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
     }
 
     /* Floating Toast */
@@ -402,40 +396,29 @@
   <div class="atmosphere-dark fixed inset-0 pointer-events-none z-0" aria-hidden="true"></div>
   <div class="atmosphere-light fixed inset-0 pointer-events-none z-0" aria-hidden="true"></div>
 
-  <!-- Centered Single-Column Cardless Editorial Container -->
-  <div class="relative z-10 w-full max-w-[620px] mx-auto px-6 pt-8 pb-24">
+  <!-- Responsive Editorial Container (Cardless Two-Column on Desktop, Single-Column on Mobile) -->
+  <div class="relative z-10 w-full max-w-[1040px] mx-auto px-5 sm:px-8 pt-7 sm:pt-9 pb-24">
 
     <!-- 1. Minimal Top Header -->
-    <header class="flex items-center justify-between gap-3 mb-11">
-      <!-- Brand Wordmark ('larba.') -->
+    <header class="flex items-center justify-between gap-3 pb-7 mb-8 sm:mb-10 border-b border-[var(--hairline)]">
+      <!-- Clean Wordmark ('larba.') with Purple Dot '.' -->
       <button
         id="brandResetBtn"
         type="button"
-        class="inline-flex items-center gap-0.5 focus:outline-none cursor-pointer group"
+        class="inline-flex items-baseline focus:outline-none cursor-pointer group"
         aria-label="larba."
       >
-        <span class="editorial-heading text-[24px] text-lotus-primary theme-transition leading-none">larba</span>
-        <span class="relative inline-flex items-center justify-center w-3.5 h-3.5 translate-y-[1px]" aria-hidden="true">
-          <svg class="w-3.5 h-3.5 group-hover:rotate-45 transition-transform duration-300" viewBox="0 0 16 16" fill="none">
-            <defs>
-              <linearGradient id="lotusBrandGrad" x1="0" y1="0" x2="16" y2="16" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#F6C856" />
-                <stop offset="50%" stop-color="#B78EF5" />
-                <stop offset="100%" stop-color="#5663D1" />
-              </linearGradient>
-            </defs>
-            <path d="M8 1C8.6 5.2 10.8 7.4 15 8C10.8 8.6 8.6 10.8 8 15C7.4 10.8 5.2 8.6 1 8C5.2 7.4 7.4 5.2 8 1Z" fill="url(#lotusBrandGrad)" />
-          </svg>
-        </span>
+        <span class="editorial-heading text-[26px] sm:text-[28px] text-lotus-primary theme-transition leading-none">larba</span>
+        <span style="color: var(--accent-secondary);" class="editorial-heading text-[28px] sm:text-[30px] theme-transition leading-none">.</span>
       </button>
 
-      <!-- Right Header Controls: Theme Switcher & Active Status Pill -->
-      <div class="flex items-center gap-2">
+      <!-- Right Header Controls: Theme Switcher & Barranetmedia Pill -->
+      <div class="flex items-center gap-2 sm:gap-2.5">
         <button
           id="themeToggleBtn"
           type="button"
           aria-label="Ganti tema tampilan"
-          class="lotus-pill inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-medium text-lotus-primary cursor-pointer"
+          class="lotus-pill inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[12px] sm:text-[12.5px] font-medium text-lotus-primary cursor-pointer"
         >
           <svg id="iconSun" class="w-3.5 h-3.5 text-lotus-gold shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="4"></circle>
@@ -454,194 +437,184 @@
           <span id="themeToggleLabel" class="whitespace-nowrap">Mode Terang</span>
         </button>
 
-        <div
-          id="authBadgePill"
-          class="hidden lotus-pill inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-medium text-lotus-secondary"
-        >
-          <span class="w-1.5 h-1.5 rounded-full bg-[#6EE7B7]"></span>
+        <div class="lotus-pill inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[12px] sm:text-[12.5px] font-medium text-lotus-secondary">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#6EE7B7] shrink-0"></span>
           <span>Barranetmedia</span>
         </div>
       </div>
     </header>
 
-    <!-- 2. Editorial Hero Header -->
-    <section class="mb-9">
-      <div class="lotus-pill inline-flex items-center gap-2 px-3 py-1 rounded-full backdrop-blur-md mb-4">
-        <span class="w-1.5 h-1.5 rounded-full radar-pulse-dot shrink-0"></span>
-        <span class="font-mono text-[10.5px] font-medium tracking-[0.08em] uppercase text-lotus-primary theme-transition">
-          RAHASIA PERUSAHAAN &middot; SPX RADAR
-        </span>
-      </div>
+    <!-- Desktop 2-Column Editorial Layout (Left: Hero + Borderless Search/Filters | Right: Zebra-Striped List) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
 
-      <h1 class="editorial-heading text-[30px] sm:text-[35px] text-lotus-primary theme-transition mb-2.5">
-        Cek &amp; lacak resi paket dalam satu layar.
-      </h1>
+      <!-- LEFT COLUMN (5 Cols on Desktop, Sticky) -->
+      <aside class="lg:col-span-5 lg:sticky lg:top-8">
+        <!-- Hero Text -->
+        <div class="mb-8">
+          <div class="lotus-pill inline-flex items-center gap-2 px-3.5 py-1 rounded-full backdrop-blur-md mb-4">
+            <span class="w-1.5 h-1.5 rounded-full radar-pulse-dot shrink-0"></span>
+            <span class="font-sans text-[11.5px] font-semibold tracking-[0.04em] uppercase text-lotus-primary theme-transition">
+              Rahasia Perusahaan
+            </span>
+          </div>
 
-      <p class="text-[14px] leading-relaxed text-lotus-secondary theme-transition max-w-[480px]">
-        Cari data pesanan pelanggan dan pantau riwayat perjalanan SPX secara langsung tanpa keluar dari halaman.
-      </p>
-    </section>
+          <h1 class="editorial-heading text-[29px] sm:text-[34px] text-lotus-primary theme-transition mb-2">
+            Cek Resi Barranetmedia
+          </h1>
 
-    <!-- 3. Login Panel (Shown before OAuth verification) -->
-    <section id="loginPanel" class="py-6">
-      <hr class="lotus-divider mb-8" />
-      <p class="text-[13.5px] font-medium text-lotus-primary mb-1.5">Akses Terbatas Tim CS</p>
-      <p class="text-[12.5px] text-lotus-secondary mb-5">
-        Masuk menggunakan akun Google yang terdaftar untuk membuka database resi.
-      </p>
-      <div id="googleSignInBtn"></div>
-      <p id="loginStatus" class="font-mono text-[12px] text-lotus-gold mt-4"></p>
-    </section>
-
-    <!-- 4. Search & Filter Panel (Shown after OAuth verification) -->
-    <section id="searchPanel" style="display:none;" aria-label="Pencarian Resi">
-      <!-- Borderless Underline Multi-Query Input -->
-      <div class="search-underline pb-3">
-        <div class="flex items-start gap-2">
-          <textarea
-            id="queryInput"
-            rows="2"
-            spellcheck="false"
-            placeholder="Cari resi, nama, atau no HP (pisahkan koma / baris baru)..."
-            class="w-full min-w-0 bg-transparent font-mono text-[14.5px] leading-relaxed text-lotus-primary theme-transition placeholder:font-sans placeholder:text-[14px] focus:outline-none resize-y"
-          ></textarea>
-          <button
-            id="clearInputInlineBtn"
-            type="button"
-            aria-label="Hapus kata kunci"
-            class="text-lotus-secondary hover:text-lotus-primary text-lg leading-none px-1.5 py-0.5 transition-colors cursor-pointer shrink-0"
-          >
-            &times;
-          </button>
-        </div>
-      </div>
-
-      <!-- Compact Translucent Filter Pills Grid -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-4">
-        <div class="lotus-pill rounded-xl px-3 py-2">
-          <label for="csInput" class="block font-mono text-[10px] uppercase tracking-wider text-lotus-muted mb-0.5">CS</label>
-          <input
-            type="text"
-            id="csInput"
-            placeholder="Semua CS"
-            class="w-full bg-transparent text-[12.5px] font-medium text-lotus-primary focus:outline-none"
-          />
+          <p class="text-[14.5px] leading-relaxed text-lotus-secondary theme-transition">
+            Selamat berjuang, sukses....
+          </p>
         </div>
 
-        <div class="lotus-pill rounded-xl px-3 py-2">
-          <label for="statusInput" class="block font-mono text-[10px] uppercase tracking-wider text-lotus-muted mb-0.5">Status</label>
-          <select
-            id="statusInput"
-            class="w-full bg-transparent text-[12.5px] font-medium text-lotus-primary focus:outline-none cursor-pointer"
-          >
-            <option value="">Semua status</option>
-            <option value="ongoing">On going</option>
-            <option value="delivered">Delivered</option>
-            <option value="retur">Retur</option>
-          </select>
+        <!-- Strictly Borderless Underline Search & Filters (Zero Boxes) -->
+        <div aria-label="Pencarian dan Filter Resi" class="space-y-5">
+          <!-- Multi-Query Underline Input -->
+          <div>
+            <label for="queryInput" class="block font-sans text-[12px] font-semibold text-lotus-secondary mb-1.5">
+              Cari resi, nama, atau no HP
+            </label>
+            <div class="search-underline flex items-start gap-2 pb-2">
+              <textarea
+                id="queryInput"
+                rows="2"
+                spellcheck="false"
+                placeholder="SPXID069316549624, Budi, 0812..."
+                class="w-full min-w-0 bg-transparent font-sans text-[14.5px] leading-relaxed text-lotus-primary theme-transition focus:outline-none resize-y"
+              ></textarea>
+              <button
+                id="clearInputInlineBtn"
+                type="button"
+                aria-label="Hapus kata kunci"
+                class="text-lotus-secondary hover:text-lotus-primary text-lg leading-none px-1.5 py-0.5 transition-colors cursor-pointer shrink-0"
+              >
+                &times;
+              </button>
+            </div>
+            <p class="text-[11.5px] text-lotus-muted mt-1.5">
+              Pisahkan dengan koma atau baris baru untuk cari banyak sekaligus.
+            </p>
+          </div>
+
+          <!-- 4 Borderless Underline Filter Fields -->
+          <div class="grid grid-cols-2 gap-x-5 gap-y-4 pt-1">
+            <div class="search-underline pb-1.5">
+              <label for="csInput" class="block font-sans text-[11px] font-semibold text-lotus-muted mb-1">CS</label>
+              <input
+                type="text"
+                id="csInput"
+                placeholder="Nama CS"
+                class="w-full bg-transparent text-[13.5px] font-medium text-lotus-primary focus:outline-none"
+              />
+            </div>
+
+            <div class="search-underline pb-1.5">
+              <label for="statusInput" class="block font-sans text-[11px] font-semibold text-lotus-muted mb-1">Status</label>
+              <select
+                id="statusInput"
+                class="w-full bg-transparent text-[13.5px] font-medium text-lotus-primary focus:outline-none cursor-pointer"
+              >
+                <option value="">Semua status</option>
+                <option value="ongoing">On going</option>
+                <option value="delivered">Delivered</option>
+                <option value="retur">Retur</option>
+              </select>
+            </div>
+
+            <div class="search-underline pb-1.5">
+              <label for="dateFromInput" class="block font-sans text-[11px] font-semibold text-lotus-muted mb-1">Dari tanggal</label>
+              <input
+                type="date"
+                id="dateFromInput"
+                class="w-full bg-transparent text-[13px] font-medium text-lotus-primary focus:outline-none"
+              />
+            </div>
+
+            <div class="search-underline pb-1.5">
+              <label for="dateToInput" class="block font-sans text-[11px] font-semibold text-lotus-muted mb-1">Sampai tanggal</label>
+              <input
+                type="date"
+                id="dateToInput"
+                class="w-full bg-transparent text-[13px] font-medium text-lotus-primary focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <!-- Action Buttons Row -->
+          <div class="flex flex-wrap items-center gap-2.5 pt-2">
+            <button
+              id="searchBtn"
+              type="button"
+              class="lotus-cta-btn font-bold text-[13px] tracking-[-0.01em] px-5 py-2.5 rounded-full cursor-pointer"
+            >
+              Cari Resi
+            </button>
+
+            <button
+              id="todayOngoingBtn"
+              type="button"
+              class="lotus-pill text-[12.5px] font-medium text-lotus-primary px-4 py-2.5 rounded-full cursor-pointer"
+            >
+              Semua ongoing
+            </button>
+
+            <button
+              id="clearBtn"
+              type="button"
+              class="text-[12.5px] font-medium text-lotus-secondary hover:text-lotus-primary px-2.5 py-2 transition-colors cursor-pointer"
+            >
+              Bersihkan
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT COLUMN (7 Cols on Desktop): Cardless Zebra-Striped Results Stream -->
+      <main aria-label="Daftar Resi Pengiriman" class="lg:col-span-7 lg:border-l lg:border-[var(--hairline)] lg:pl-10">
+        <div class="flex items-center justify-between gap-2 pb-3.5 border-b border-[var(--hairline)]">
+          <h2 class="font-sans text-[12px] font-semibold uppercase tracking-[0.08em] text-lotus-secondary">
+            Daftar Resi
+          </h2>
+          <span id="statusLine" class="font-sans text-[12px] font-medium text-lotus-muted">
+            Menampilkan 4 data contoh
+          </span>
         </div>
 
-        <div class="lotus-pill rounded-xl px-3 py-2">
-          <label for="dateFromInput" class="block font-mono text-[10px] uppercase tracking-wider text-lotus-muted mb-0.5">Dari</label>
-          <input
-            type="date"
-            id="dateFromInput"
-            class="w-full bg-transparent text-[12px] font-medium text-lotus-primary focus:outline-none"
-          />
-        </div>
+        <!-- Cardless Alternating Zebra List Container -->
+        <div id="resultsArea" class="divide-y divide-[var(--hairline)]"></div>
+      </main>
 
-        <div class="lotus-pill rounded-xl px-3 py-2">
-          <label for="dateToInput" class="block font-mono text-[10px] uppercase tracking-wider text-lotus-muted mb-0.5">Sampai</label>
-          <input
-            type="date"
-            id="dateToInput"
-            class="w-full bg-transparent text-[12px] font-medium text-lotus-primary focus:outline-none"
-          />
-        </div>
-      </div>
-
-      <!-- Action Row -->
-      <div class="flex flex-wrap items-center justify-between gap-3 mt-5">
-        <div class="flex flex-wrap items-center gap-2">
-          <button
-            id="searchBtn"
-            type="button"
-            class="lotus-cta-btn font-bold text-[13px] tracking-[-0.01em] px-5 py-2.5 rounded-full cursor-pointer"
-          >
-            Cari Resi
-          </button>
-
-          <button
-            id="todayOngoingBtn"
-            type="button"
-            class="lotus-pill text-[12.5px] font-medium text-lotus-primary px-4 py-2.5 rounded-full cursor-pointer"
-          >
-            Semua ongoing
-          </button>
-
-          <button
-            id="clearBtn"
-            type="button"
-            class="text-[12.5px] font-medium text-lotus-secondary hover:text-lotus-primary px-3 py-2 transition-colors cursor-pointer"
-          >
-            Bersihkan
-          </button>
-        </div>
-
-        <span id="statusLine" class="font-mono text-[11.5px] text-lotus-secondary"></span>
-      </div>
-    </section>
-
-    <!-- Hairline Divider -->
-    <hr class="lotus-divider my-9" />
-
-    <!-- 5. Lightweight Shimmer Skeleton During Search -->
-    <div id="searchShimmer" class="hidden space-y-6 py-2" aria-hidden="true">
-      <div class="space-y-2.5">
-        <div class="h-4 w-40 rounded-full shimmer-bar"></div>
-        <div class="h-5 w-64 rounded shimmer-bar"></div>
-        <div class="h-3 w-48 rounded shimmer-bar"></div>
-      </div>
-      <hr class="lotus-divider" />
-      <div class="space-y-2.5">
-        <div class="h-4 w-36 rounded-full shimmer-bar"></div>
-        <div class="h-5 w-56 rounded shimmer-bar"></div>
-        <div class="h-3 w-52 rounded shimmer-bar"></div>
-      </div>
     </div>
-
-    <!-- 6. Cardless Editorial Results List -->
-    <section id="resultsArea" aria-label="Hasil Pencarian Resi"></section>
 
   </div>
 
   <!-- ========================================================================
-       SLIDE-UP FROSTED BOTTOM SHEET ('In-App Live SPX Tracking')
+       SLIDE-UP / CENTERED FROSTED SHEET ('In-App Live SPX Tracking')
        ======================================================================== -->
   <div
     id="trackDrawerOverlay"
     aria-hidden="true"
-    class="drawer-overlay fixed inset-0 z-50 backdrop-blur-sm flex flex-col justify-end items-center"
+    class="drawer-overlay fixed inset-0 z-50 backdrop-blur-sm flex flex-col justify-end sm:justify-center items-center p-0 sm:p-4"
   >
     <!-- Clickable Backdrop -->
-    <div id="drawerBackdrop" class="w-full flex-1"></div>
+    <div id="drawerBackdrop" class="fixed inset-0"></div>
 
-    <!-- Centered Bottom Sheet Panel -->
+    <!-- Frosted Sheet Panel -->
     <div
       role="dialog"
       aria-modal="true"
       aria-label="Detail Perjalanan Paket"
-      class="drawer-sheet w-full max-w-[580px] max-h-[86vh] rounded-t-3xl px-6 pt-4 pb-10 flex flex-col"
+      class="drawer-sheet relative z-10 w-full max-w-[580px] max-h-[88vh] rounded-t-3xl sm:rounded-3xl px-5 sm:px-6 pt-4 pb-8 sm:pb-9 flex flex-col"
     >
-      <!-- Drag Handle -->
-      <div style="background-color: var(--hairline);" class="w-10 h-1 rounded-full mx-auto mb-5 shrink-0"></div>
+      <!-- Drag Handle (Mobile) -->
+      <div style="background-color: var(--hairline);" class="w-10 h-1 rounded-full mx-auto mb-4 sm:hidden shrink-0"></div>
 
-      <!-- Top Bar: Courier + Resi + Copy + Close -->
+      <!-- Top Bar: Courier + Resi (Plus Jakarta Sans) + Copy + Close -->
       <div style="border-bottom: 1px solid var(--hairline);" class="flex items-center justify-between gap-3 pb-4 shrink-0">
         <div class="inline-flex items-center gap-2 flex-wrap">
           <span class="text-[13px] font-semibold text-lotus-accent">SPX Express</span>
           <span class="text-lotus-muted">&middot;</span>
-          <span id="drawerResiCode" class="font-mono text-[13.5px] font-medium text-lotus-primary">-</span>
+          <span id="drawerResiCode" class="font-sans text-[14.5px] font-bold tabular-nums tracking-tight text-lotus-primary">-</span>
           <button
             id="drawerCopyBtn"
             type="button"
@@ -658,16 +631,14 @@
         <button
           id="closeDrawerBtn"
           type="button"
-          class="lotus-pill text-[12px] font-medium text-lotus-secondary hover:text-lotus-primary px-3 py-1 rounded-full cursor-pointer"
+          class="lotus-pill text-[12px] font-semibold text-lotus-secondary hover:text-lotus-primary px-3.5 py-1.5 rounded-full cursor-pointer"
         >
           Tutup
         </button>
       </div>
 
       <!-- Scrollable Live Tracking Body -->
-      <div id="drawerBody" class="overflow-y-auto pt-6 pr-1">
-        <!-- Populated dynamically -->
-      </div>
+      <div id="drawerBody" class="overflow-y-auto pt-5 pr-1"></div>
     </div>
   </div>
 
@@ -686,15 +657,133 @@
 
   <script>
     /**
-     * larba. — Pelacakan & Cek Resi SPX (Twilight Lotus Dual Theme)
+     * larba. — Interactive Visual Preview (Twilight Lotus Dual Theme)
      */
-    var API_URL = "https://script.google.com/macros/s/AKfycbyZo8dEMfDcS84-WDwZiZeZS-WzdAwLOAyr_lU1TAovOZdW7PV0Qh338mhNJRDOKua1oA/exec";
-    var GOOGLE_CLIENT_ID = "315770296664-pkethfkpdhd9bqj1lnjj0ec06eos8rlv.apps.googleusercontent.com";
 
-    var ID_TOKEN = null;
-    var expandedCards = {};
-    var lastData = null;
-    var trackingCache = {};
+    // 1. 4 Realistic Pre-Populated Orders for Visual Inspection
+    const SAMPLE_ORDERS = [
+      {
+        resi: "SPXID069316549624",
+        nama: "Budi Santoso",
+        noHp: "081264901122",
+        alamat: "Jl. Pertahanan No. 111, Tembung, Kec. Percut Sei Tuan, Kab. Deli Serdang, Sumatera Utara",
+        produk: "Paket Herbal Propolis 3 Botol",
+        harga: 285000,
+        status: "Delivered",
+        statusGroup: "delivered",
+        tanggal: "10/04/2026",
+        dateIso: "2026-04-10",
+        cs: "Aawan",
+        linkResi: "https://spx.co.id/track?SPXID069316549624"
+      },
+      {
+        resi: "SPXID0492817263",
+        nama: "Raka Pratama",
+        noHp: "085729104488",
+        alamat: "Jl. Pandanaran No. 42, Mugassari, Kec. Semarang Selatan, Kota Semarang, Jawa Tengah",
+        produk: "Madu Hutan Murni 500gr + Ekstrak Temulawak",
+        harga: 195000,
+        status: "On going",
+        statusGroup: "ongoing",
+        tanggal: "21/11/2026",
+        dateIso: "2026-11-21",
+        cs: "Nadia",
+        linkResi: "https://spx.co.id/track?SPXID0492817263"
+      },
+      {
+        resi: "SPXID0881920451",
+        nama: "Siti Rahmawati",
+        noHp: "081388402291",
+        alamat: "Jl. Raya Darmo Permai III No. 18, Sukomanunggal, Kota Surabaya, Jawa Timur",
+        produk: "Kapsul Habbatussauda Premium (2 Box)",
+        harga: 240000,
+        status: "Delivered",
+        statusGroup: "delivered",
+        tanggal: "19/11/2026",
+        dateIso: "2026-11-19",
+        cs: "Aawan",
+        linkResi: "https://spx.co.id/track?SPXID0881920451"
+      },
+      {
+        resi: "SPXID0772319842",
+        nama: "Hendra Wijaya",
+        noHp: "082177550913",
+        alamat: "Jl. Gatot Subroto Barat No. 88, Petisah Tengah, Kec. Medan Petisah, Kota Medan",
+        produk: "Paket Bundling Stamina Pria (COD)",
+        harga: 310000,
+        status: "Retur",
+        statusGroup: "retur",
+        tanggal: "17/11/2026",
+        dateIso: "2026-11-17",
+        cs: "Dimas",
+        linkResi: "https://spx.co.id/track?SPXID0772319842"
+      }
+    ];
+
+    // 2. Real SPX Tracking Data for the Interactive Drawer
+    const TRACKING_DETAILS = {
+      "SPXID069316549624": {
+        resi: "SPXID069316549624",
+        statusUtama: "Delivered",
+        originCity: "Yogyakarta",
+        destinationCity: "Medan",
+        progressPct: 100,
+        riwayat: [
+          { waktu: 1776346536, deskripsi: "Pesanan tiba di alamat tujuan. diterima oleh Lainnya.", lokasi: "Medan Hub" },
+          { waktu: 1776322292, deskripsi: "Pesanan dalam proses pengantaran.", lokasi: "Medan Hub" },
+          { waktu: 1776317990, deskripsi: "Pesanan diproses di lokasi transit Medan Hub.", lokasi: "Medan Hub" },
+          { waktu: 1776315633, deskripsi: "Pesanan dikirim dari lokasi sortir Percut Sei Tuan DC ke Medan Hub.", lokasi: "Percut Sei Tuan DC" },
+          { waktu: 1776287547, deskripsi: "Pesanan diproses di lokasi sortir Percut Sei Tuan DC.", lokasi: "Percut Sei Tuan DC" },
+          { waktu: 1776023596, deskripsi: "Pesanan dikirim dari lokasi sortir Kosambi DC ke Percut Sei Tuan DC.", lokasi: "Kosambi DC" },
+          { waktu: 1775878752, deskripsi: "Pesanan diproses di lokasi sortir Kosambi DC.", lokasi: "Kosambi DC" },
+          { waktu: 1775796391, deskripsi: "Pesanan dikirim dari lokasi sortir Yogyakarta DC ke Kosambi DC.", lokasi: "Yogyakarta DC" },
+          { waktu: 1775759030, deskripsi: "Pesanan diproses di lokasi sortir Yogyakarta DC.", lokasi: "Yogyakarta DC" },
+          { waktu: 1775751950, deskripsi: "Pesanan dikirim dari lokasi transit Banguntapan 2 First Mile Hub.", lokasi: "Banguntapan 2 First Mile Hub" },
+          { waktu: 1775742722, deskripsi: "Pesanan tiba di lokasi transit Banguntapan 2 First Mile Hub.", lokasi: "Banguntapan 2 First Mile Hub" },
+          { waktu: 1775726253, deskripsi: "Pesanan telah diserahkan ke jasa kirim untuk diproses.", lokasi: "" }
+        ]
+      },
+      "SPXID0492817263": {
+        resi: "SPXID0492817263",
+        statusUtama: "Dalam Perjalanan",
+        originCity: "Yogyakarta",
+        destinationCity: "Semarang",
+        progressPct: 78,
+        riwayat: [
+          { waktu: 1795315200, deskripsi: "Pesanan dalam proses pengantaran oleh kurir menuju alamat penerima.", lokasi: "Banyumanik Hub" },
+          { waktu: 1795304400, deskripsi: "Pesanan diproses di lokasi transit Banyumanik Hub.", lokasi: "Banyumanik Hub" },
+          { waktu: 1795282800, deskripsi: "Pesanan dikirim dari lokasi sortir Yogyakarta DC ke Semarang DC.", lokasi: "Yogyakarta DC" },
+          { waktu: 1795261200, deskripsi: "Pesanan telah diserahkan ke jasa kirim untuk diproses.", lokasi: "Banguntapan 2 First Mile Hub" }
+        ]
+      },
+      "SPXID0881920451": {
+        resi: "SPXID0881920451",
+        statusUtama: "Delivered",
+        originCity: "Bandung",
+        destinationCity: "Surabaya",
+        progressPct: 100,
+        riwayat: [
+          { waktu: 1795168800, deskripsi: "Pesanan tiba di alamat tujuan. Diterima oleh Yang Bersangkutan.", lokasi: "Sukomanunggal Hub" },
+          { waktu: 1795154400, deskripsi: "Pesanan dalam proses pengantaran.", lokasi: "Sukomanunggal Hub" },
+          { waktu: 1795111200, deskripsi: "Pesanan dikirim dari lokasi sortir Bandung DC ke Surabaya DC.", lokasi: "Bandung DC" }
+        ]
+      },
+      "SPXID0772319842": {
+        resi: "SPXID0772319842",
+        statusUtama: "Retur",
+        originCity: "Jakarta",
+        destinationCity: "Medan",
+        progressPct: 55,
+        riwayat: [
+          { waktu: 1795082400, deskripsi: "Paket sedang dikembalikan ke pengirim setelah 2x percobaan pengantaran.", lokasi: "Medan Petisah Hub" },
+          { waktu: 1795060800, deskripsi: "Pengantaran gagal: Penerima tidak berada di tempat / alamat tidak dapat dihubungi.", lokasi: "Medan Petisah Hub" },
+          { waktu: 1794974400, deskripsi: "Pesanan diproses di lokasi transit Medan Hub.", lokasi: "Medan Hub" }
+        ]
+      }
+    };
+
+    var expandedRows = {};
+    var currentFiltered = SAMPLE_ORDERS.slice();
     var activeDrawerResi = "";
     var toastTimer = null;
 
@@ -704,11 +793,6 @@
       themeToggleLabel: document.getElementById('themeToggleLabel'),
       iconSun: document.getElementById('iconSun'),
       iconMoon: document.getElementById('iconMoon'),
-      authBadgePill: document.getElementById('authBadgePill'),
-
-      loginPanel: document.getElementById('loginPanel'),
-      loginStatus: document.getElementById('loginStatus'),
-      searchPanel: document.getElementById('searchPanel'),
 
       queryInput: document.getElementById('queryInput'),
       clearInputInlineBtn: document.getElementById('clearInputInlineBtn'),
@@ -721,8 +805,6 @@
       todayOngoingBtn: document.getElementById('todayOngoingBtn'),
       clearBtn: document.getElementById('clearBtn'),
       statusLine: document.getElementById('statusLine'),
-
-      searchShimmer: document.getElementById('searchShimmer'),
       resultsArea: document.getElementById('resultsArea'),
 
       trackDrawerOverlay: document.getElementById('trackDrawerOverlay'),
@@ -764,7 +846,7 @@
         root.classList.add('dark');
       }
       try {
-        localStorage.setItem('larba_theme_mode', switchingToLight ? 'light' : 'dark');
+        localStorage.setItem('larba_preview_theme', switchingToLight ? 'light' : 'dark');
       } catch (e) {}
       syncThemeUI();
       showToast(switchingToLight ? 'Beralih ke Mode Terang' : 'Beralih ke Mode Gelap');
@@ -802,68 +884,287 @@
     }
 
     /* ========================================================================
-       2. GOOGLE SIGN-IN & JSONP BACKEND BRIDGE
+       2. INTERACTIVE FILTER & ZEBRA-STRIPED LIST RENDERING
        ======================================================================== */
-    window.onload = function () {
-      if (typeof google === 'undefined') return;
-      google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: handleGoogleSignIn,
-        auto_select: true
-      });
-      google.accounts.id.renderButton(
-        document.getElementById('googleSignInBtn'),
-        { theme: 'outline', size: 'large', text: 'signin_with', shape: 'pill' }
-      );
-      google.accounts.id.prompt();
-    };
-
-    function jsonpRequest(params, callback) {
-      var callbackName = 'jsonp_cb_' + Date.now() + '_' + Math.floor(Math.random() * 100000);
-      window[callbackName] = function (data) {
-        delete window[callbackName];
-        if (script.parentNode) document.body.removeChild(script);
-        callback(null, data);
+    function getStatusBadgeStyle(group) {
+      if (group === 'delivered') {
+        return {
+          dot: 'var(--accent-delivered)',
+          textClass: 'text-lotus-delivered',
+          pillBg: 'rgba(110, 231, 183, 0.14)',
+          pillBorder: 'rgba(110, 231, 183, 0.3)'
+        };
+      }
+      if (group === 'ongoing') {
+        return {
+          dot: 'var(--accent-gold)',
+          textClass: 'text-lotus-gold',
+          pillBg: 'rgba(246, 200, 86, 0.14)',
+          pillBorder: 'rgba(246, 200, 86, 0.3)'
+        };
+      }
+      if (group === 'retur') {
+        return {
+          dot: 'var(--accent-retur)',
+          textClass: 'text-lotus-retur',
+          pillBg: 'rgba(253, 164, 175, 0.14)',
+          pillBorder: 'rgba(253, 164, 175, 0.3)'
+        };
+      }
+      return {
+        dot: 'var(--accent-primary)',
+        textClass: 'text-lotus-accent',
+        pillBg: 'var(--badge-bg)',
+        pillBorder: 'var(--pill-border)'
       };
-      var query = Object.keys(params).map(function (k) {
-        return k + '=' + encodeURIComponent(params[k]);
-      }).join('&');
-      var script = document.createElement('script');
-      script.src = API_URL + '?' + query + '&callback=' + callbackName;
-      script.onerror = function () {
-        delete window[callbackName];
-        if (script.parentNode) document.body.removeChild(script);
-        callback(new Error('Gagal memuat data dari server.'));
-      };
-      document.body.appendChild(script);
     }
 
-    function handleGoogleSignIn(response) {
-      ID_TOKEN = response.credential;
-      el.loginStatus.textContent = 'Memeriksa akses akun...';
+    function filterOrders() {
+      var rawQ = el.queryInput.value.trim().toLowerCase();
+      var terms = rawQ ? rawQ.split(/[\n,]+/).map(function (t) { return t.trim(); }).filter(Boolean) : [];
+      var cs = el.csInput.value.trim().toLowerCase();
+      var st = el.statusInput.value;
+      var dFrom = el.dateFromInput.value;
+      var dTo = el.dateToInput.value;
 
-      jsonpRequest({ token: ID_TOKEN, q: '__cek_akses__' }, function (err, data) {
-        if (err) {
-          el.loginStatus.textContent = 'Gagal terhubung: ' + err.message;
-          return;
-        }
-        if (!data.success) {
-          el.loginStatus.textContent = data.error;
-          ID_TOKEN = null;
-          return;
-        }
-        el.loginPanel.style.display = 'none';
-        el.searchPanel.style.display = '';
-        el.authBadgePill.classList.remove('hidden');
+      currentFiltered = SAMPLE_ORDERS.filter(function (item) {
+        var matchQ = terms.length === 0 || terms.some(function (term) {
+          return item.resi.toLowerCase().indexOf(term) !== -1 ||
+            item.nama.toLowerCase().indexOf(term) !== -1 ||
+            item.noHp.toLowerCase().indexOf(term) !== -1;
+        });
+        var matchCs = !cs || item.cs.toLowerCase().indexOf(cs) !== -1;
+        var matchSt = !st || item.statusGroup === st;
+        var matchFrom = !dFrom || item.dateIso >= dFrom;
+        var matchTo = !dTo || item.dateIso <= dTo;
+        return matchQ && matchCs && matchSt && matchFrom && matchTo;
       });
+
+      el.statusLine.textContent = 'Menampilkan ' + currentFiltered.length + ' hasil';
+      renderRows(currentFiltered);
+    }
+
+    function toggleRowDetail(resi) {
+      expandedRows[resi] = !expandedRows[resi];
+      renderRows(currentFiltered);
+    }
+
+    function renderRows(list) {
+      if (list.length === 0) {
+        el.resultsArea.innerHTML =
+          '<div class="py-14 px-4 text-center">' +
+            '<p class="text-[14.5px] font-semibold text-lotus-primary">Tidak ada resi yang cocok</p>' +
+            '<p class="text-[12.5px] text-lotus-secondary mt-1">Klik "Bersihkan" untuk menampilkan kembali semua data contoh.</p>' +
+          '</div>';
+        return;
+      }
+
+      var html = list.map(function (item, index) {
+        var zebraClass = (index % 2 === 0) ? 'resi-row-odd' : 'resi-row-even';
+        var st = getStatusBadgeStyle(item.statusGroup);
+        var isOpen = !!expandedRows[item.resi];
+        var hargaFmt = 'Rp' + Number(item.harga).toLocaleString('id-ID');
+
+        return (
+          '<article class="resi-row ' + zebraClass + ' px-3.5 sm:px-5 py-4 sm:py-5">' +
+            '<!-- Top Row: Resi (Plus Jakarta Sans) + Status + Tanggal & CS -->' +
+            '<div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">' +
+              '<div class="inline-flex items-center gap-2.5 flex-wrap">' +
+                '<button type="button" onclick="copyTextToClipboard(\'' + item.resi + '\')" class="font-sans text-[15px] sm:text-[15.5px] font-bold tabular-nums tracking-tight text-lotus-primary hover:text-lotus-accent transition-colors cursor-pointer text-left" title="Salin nomor resi">' +
+                  escapeHtml(item.resi) +
+                '</button>' +
+                '<span style="background-color:' + st.pillBg + '; border-color:' + st.pillBorder + ';" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-[11px] font-semibold ' + st.textClass + '">' +
+                  '<span style="background-color:' + st.dot + ';" class="w-1.5 h-1.5 rounded-full"></span>' +
+                  '<span>' + escapeHtml(item.status) + '</span>' +
+                '</span>' +
+              '</div>' +
+
+              '<div class="text-[12px] text-lotus-muted">' +
+                escapeHtml(item.tanggal) + ' <span class="mx-1">&middot;</span> CS ' + escapeHtml(item.cs) +
+              '</div>' +
+            '</div>' +
+
+            '<!-- Second Row: Nama, No HP & Harga -->' +
+            '<div class="flex flex-wrap items-baseline justify-between gap-2 mb-1">' +
+              '<p class="text-[14px] font-semibold text-lotus-primary">' +
+                escapeHtml(item.nama) +
+                ' <span class="font-normal text-[13px] text-lotus-secondary">&middot; ' + escapeHtml(item.noHp) + '</span>' +
+              '</p>' +
+              '<span class="font-sans text-[13.5px] font-semibold tabular-nums text-lotus-gold">' + hargaFmt + '</span>' +
+            '</div>' +
+
+            '<!-- Third Row: Produk & Alamat (Collapsible) -->' +
+            '<p class="text-[13px] text-lotus-secondary ' + (isOpen ? 'leading-relaxed' : 'truncate') + '">' +
+              escapeHtml(item.produk) +
+              (isOpen ? ' <span class="text-lotus-muted">&mdash;</span> ' + escapeHtml(item.alamat) : '') +
+            '</p>' +
+
+            '<!-- Fourth Row: Action Buttons -->' +
+            '<div class="flex flex-wrap items-center justify-between gap-2 pt-3">' +
+              '<div class="flex flex-wrap items-center gap-2">' +
+                '<button type="button" onclick="openLiveTrack(\'' + item.resi + '\')" class="lotus-pill inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[12px] font-semibold text-lotus-accent hover:text-lotus-primary cursor-pointer">' +
+                  '<span class="w-1.5 h-1.5 rounded-full radar-pulse-dot"></span>' +
+                  '<span>Lacak Paket</span>' +
+                '</button>' +
+
+                '<button type="button" onclick="showToast(\'Membuka template WhatsApp untuk ' + escapeHtml(item.nama) + '\')" class="lotus-pill inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[12px] font-medium text-lotus-delivered cursor-pointer">' +
+                  '<span>WhatsApp</span>' +
+                '</button>' +
+
+                '<button type="button" onclick="copyTextToClipboard(\'' + item.resi + '\')" class="text-[12px] font-medium text-lotus-secondary hover:text-lotus-primary px-2 py-1 transition-colors cursor-pointer">' +
+                  'Salin' +
+                '</button>' +
+              '</div>' +
+
+              '<button type="button" onclick="toggleRowDetail(\'' + item.resi + '\')" class="inline-flex items-center gap-1 text-[12px] font-medium text-lotus-muted hover:text-lotus-primary transition-colors cursor-pointer">' +
+                '<span>' + (isOpen ? 'Ringkas' : 'Detail') + '</span>' +
+                '<svg class="w-3.5 h-3.5 transition-transform duration-150 ' + (isOpen ? 'rotate-180' : '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>' +
+              '</button>' +
+            '</div>' +
+          '</article>'
+        );
+      }).join('');
+
+      el.resultsArea.innerHTML = html;
     }
 
     /* ========================================================================
-       3. SEARCH & RENDERING CARDLESS ORDER LIST
+       3. INTERACTIVE IN-APP LIVE TRACKING DRAWER / MODAL
        ======================================================================== */
-    el.clearInputInlineBtn.addEventListener('click', function () {
+    function openLiveTrack(resi) {
+      var data = TRACKING_DETAILS[resi] || TRACKING_DETAILS["SPXID069316549624"];
+      activeDrawerResi = data.resi;
+      el.drawerResiCode.textContent = data.resi;
+      el.drawerCopyLabel.textContent = 'Salin';
+
+      var riwayat = data.riwayat || [];
+      var isDelivered = data.statusUtama.toLowerCase() === 'delivered';
+      var isRetur = data.statusUtama.toLowerCase() === 'retur';
+      var latest = riwayat[0] || {};
+
+      var latestTimeStr = '';
+      if (latest.waktu) {
+        var dLatest = new Date(latest.waktu * 1000);
+        latestTimeStr = dLatest.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) +
+          ', ' + dLatest.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
+      }
+
+      var statusColorClass = isDelivered ? 'text-lotus-delivered' : (isRetur ? 'text-lotus-retur' : 'text-lotus-accent');
+
+      var html =
+        '<div class="mb-2 flex items-center justify-between gap-2">' +
+          '<div class="flex items-center gap-2">' +
+            '<span class="font-sans text-[11.5px] font-bold uppercase tracking-[0.08em] ' + statusColorClass + '">' +
+              escapeHtml(data.statusUtama) +
+            '</span>' +
+            (isDelivered ? '<span class="text-[11.5px] font-semibold text-lotus-delivered">&bull; Selesai</span>' : '') +
+          '</div>' +
+          '<span class="font-mono text-[11px] text-lotus-muted">In-App Live View</span>' +
+        '</div>' +
+
+        '<h3 class="editorial-heading text-[20px] sm:text-[22px] text-lotus-primary leading-[1.28] mb-2">' +
+          escapeHtml(latest.deskripsi || '') +
+        '</h3>' +
+
+        (latestTimeStr
+          ? '<p class="text-[12.5px] text-lotus-secondary mb-6">Pembaruan terakhir: <span class="font-mono text-[12px] text-lotus-primary">' + latestTimeStr + '</span></p>'
+          : '') +
+
+        '<!-- 2px Route Progress Bar with Glowing Gold Comet Indicator -->' +
+        '<div class="mb-2">' +
+          '<div class="flex items-end justify-between gap-4 mb-2">' +
+            '<div>' +
+              '<span class="block text-[10px] font-semibold uppercase tracking-[0.12em] text-lotus-muted mb-0.5">Asal</span>' +
+              '<p class="text-[15px] font-bold text-lotus-primary leading-tight">' + escapeHtml(data.originCity) + '</p>' +
+            '</div>' +
+            '<div class="text-right">' +
+              '<span class="block text-[10px] font-semibold uppercase tracking-[0.12em] text-lotus-muted mb-0.5">Tujuan</span>' +
+              '<p class="text-[15px] font-bold text-lotus-primary leading-tight">' + escapeHtml(data.destinationCity) + '</p>' +
+            '</div>' +
+          '</div>' +
+
+          '<div class="route-track-bg relative w-full h-[2px] rounded-full my-2.5">' +
+            '<div style="width: ' + data.progressPct + '%;" class="route-progress-beam h-full rounded-full"></div>' +
+            '<span style="left: ' + data.progressPct + '%;" class="route-comet-dot absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full"></span>' +
+          '</div>' +
+
+          '<div class="flex items-center justify-between gap-3 text-[11.5px] text-lotus-secondary mt-2">' +
+            '<span>' + (isDelivered ? 'Pengiriman selesai dengan bukti tanda terima' : 'Perjalanan paket terpantau langsung') + '</span>' +
+            '<span class="font-mono text-[11.5px] font-semibold ' + (isDelivered ? 'text-lotus-delivered' : 'text-lotus-gold') + '">' + data.progressPct + '%</span>' +
+          '</div>' +
+        '</div>' +
+
+        '<hr class="lotus-divider my-7" />' +
+
+        '<div>' +
+          '<div class="flex items-center justify-between mb-5">' +
+            '<h4 class="text-[11px] font-bold uppercase tracking-[0.12em] text-lotus-secondary">Riwayat Perjalanan</h4>' +
+            '<span class="font-mono text-[11px] text-lotus-muted">' + riwayat.length + ' pembaruan</span>' +
+          '</div>' +
+          '<ol class="relative">';
+
+      riwayat.forEach(function (ev, idx) {
+        var isFirst = idx === 0;
+        var isLast = idx === riwayat.length - 1;
+        var dt = new Date(ev.waktu * 1000);
+        var waktuStr = dt.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }) +
+          ', ' + dt.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+        html +=
+          '<li class="relative flex gap-3.5">' +
+            '<div class="relative flex flex-col items-center w-4 shrink-0">' +
+              (!isLast ? '<span class="timeline-vertical-line absolute top-4 bottom-0 w-[1px]" aria-hidden="true"></span>' : '') +
+              '<div class="relative w-4 h-4 mt-1 flex items-center justify-center">' +
+                (isFirst
+                  ? '<span class="timeline-active-node w-2.5 h-2.5 rounded-full"></span>'
+                  : '<span class="timeline-past-node w-1.5 h-1.5 rounded-full"></span>') +
+              '</div>' +
+            '</div>' +
+
+            '<div class="' + (isLast ? 'pb-0' : 'pb-5') + ' flex-1 min-w-0">' +
+              '<div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 mb-0.5">' +
+                '<p class="text-[13.5px] leading-snug ' + (isFirst ? 'font-semibold text-lotus-primary' : 'font-medium text-lotus-primary opacity-85') + '">' +
+                  escapeHtml(ev.deskripsi) +
+                '</p>' +
+                '<time class="font-mono text-[11px] shrink-0 ' + (isFirst ? 'text-lotus-gold font-medium' : 'text-lotus-muted') + '">' +
+                  waktuStr +
+                '</time>' +
+              '</div>' +
+              (ev.lokasi
+                ? '<p class="text-[12px] text-lotus-secondary mt-0.5">' + escapeHtml(ev.lokasi) + '</p>'
+                : '') +
+            '</div>' +
+          '</li>';
+      });
+
+      html += '</ol></div>';
+      el.drawerBody.innerHTML = html;
+
+      el.trackDrawerOverlay.classList.add('is-open');
+      el.trackDrawerOverlay.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeTrackDrawer() {
+      el.trackDrawerOverlay.classList.remove('is-open');
+      el.trackDrawerOverlay.setAttribute('aria-hidden', 'true');
+    }
+
+    // Event Listeners
+    el.searchBtn.addEventListener('click', filterOrders);
+    el.queryInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) filterOrders();
+    });
+    el.statusInput.addEventListener('change', filterOrders);
+    el.dateFromInput.addEventListener('change', filterOrders);
+    el.dateToInput.addEventListener('change', filterOrders);
+
+    el.todayOngoingBtn.addEventListener('click', function () {
       el.queryInput.value = '';
-      el.queryInput.focus();
+      el.csInput.value = '';
+      el.statusInput.value = 'ongoing';
+      el.dateFromInput.value = '';
+      el.dateToInput.value = '';
+      filterOrders();
     });
 
     el.clearBtn.addEventListener('click', function () {
@@ -872,423 +1173,18 @@
       el.statusInput.value = '';
       el.dateFromInput.value = '';
       el.dateToInput.value = '';
-      el.resultsArea.innerHTML = '';
-      el.statusLine.textContent = '';
+      filterOrders();
     });
 
-    el.searchBtn.addEventListener('click', searchResi);
+    el.clearInputInlineBtn.addEventListener('click', function () {
+      el.queryInput.value = '';
+      filterOrders();
+      el.queryInput.focus();
+    });
+
     el.brandResetBtn.addEventListener('click', function () {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
-
-    el.todayOngoingBtn.addEventListener('click', function () {
-      el.queryInput.value = '';
-      el.csInput.value = '';
-      el.statusInput.value = 'ongoing';
-      el.dateFromInput.value = '';
-      el.dateToInput.value = '';
-      searchResi();
-    });
-
-    el.queryInput.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-        searchResi();
-      }
-    });
-
-    function getStatusMeta(status) {
-      var s = (status || '').toLowerCase();
-      if (s.indexOf('deliver') !== -1) {
-        return { label: status, colorClass: 'text-lotus-delivered', dotColor: 'var(--accent-delivered)' };
-      }
-      if (s.indexOf('ongoing') !== -1 || s.indexOf('on going') !== -1 || s.indexOf('on-going') !== -1 || s.indexOf('proses') !== -1) {
-        return { label: status, colorClass: 'text-lotus-gold', dotColor: 'var(--accent-gold)' };
-      }
-      if (s.indexOf('retur') !== -1) {
-        return { label: status, colorClass: 'text-lotus-retur', dotColor: 'var(--accent-retur)' };
-      }
-      return { label: status || 'Lainnya', colorClass: 'text-lotus-accent', dotColor: 'var(--accent-primary)' };
-    }
-
-    function buildWaMessage(item) {
-      return "Halo Kak " + item.nama + " \uD83D\uDC4B\n\n" +
-        "\uD83D\uDCE6 Nomor Resi Pesanan " + item.produk + ":\n" +
-        item.resi + "\n\n" +
-        "Mohon pastikan nomor resi pada paket sama dengan nomor di atas saat paket diterima.\n\n" +
-        "Cek posisi paket di sini:\n" +
-        item.linkResi + "\n\n" +
-        "Terima kasih \uD83D\uDE4F";
-    }
-
-    function waLink(item) {
-      var phone = String(item.noHp).replace(/\D/g, '');
-      var normalized = phone.charAt(0) === '0'
-        ? '62' + phone.slice(1)
-        : (phone.indexOf('62') === 0 ? phone : '62' + phone);
-      return 'https://wa.me/' + normalized + '?text=' + encodeURIComponent(buildWaMessage(item));
-    }
-
-    function searchResi() {
-      var raw = el.queryInput.value.trim();
-      var cs = el.csInput.value.trim();
-      var status = el.statusInput.value;
-      var dateFrom = el.dateFromInput.value;
-      var dateTo = el.dateToInput.value;
-
-      if (!raw && !cs && !status && !dateFrom && !dateTo) {
-        el.statusLine.textContent = 'Isi kata kunci atau pilih filter dulu.';
-        showToast('Masukkan kata kunci atau pilih filter');
-        return;
-      }
-
-      el.searchBtn.disabled = true;
-      el.statusLine.textContent = 'Memindai data...';
-      el.resultsArea.innerHTML = '';
-      el.searchShimmer.classList.remove('hidden');
-
-      jsonpRequest({
-        token: ID_TOKEN,
-        q: raw,
-        cs: cs,
-        status: status,
-        dateFrom: dateFrom,
-        dateTo: dateTo
-      }, function (err, data) {
-        el.searchBtn.disabled = false;
-        el.searchShimmer.classList.add('hidden');
-
-        if (err) {
-          el.statusLine.textContent = 'Gagal terhubung';
-          showToast(err.message);
-          return;
-        }
-        if (!data.success) {
-          el.statusLine.textContent = 'Terjadi kesalahan';
-          showToast(data.error);
-          return;
-        }
-        el.statusLine.textContent = data.total + ' hasil ditemukan';
-        renderResults(data);
-      });
-    }
-
-    function toggleCard(resiId) {
-      expandedCards[resiId] = !expandedCards[resiId];
-      if (lastData) renderResults(lastData);
-    }
-
-    function renderResults(data) {
-      lastData = data;
-      var html = '';
-
-      // Summary Pills
-      html += '<div class="flex flex-wrap items-center justify-between gap-2 mb-6">' +
-        '<div class="flex items-center gap-2 flex-wrap">' +
-          '<span style="background-color: var(--badge-bg);" class="font-mono text-[11.5px] font-medium text-lotus-accent px-3 py-1 rounded-full">&#10003; Ditemukan: ' + data.total + '</span>' +
-          (data.notFound.length > 0 ? '<span class="lotus-pill font-mono text-[11.5px] text-lotus-retur px-3 py-1 rounded-full">&#10007; Tidak ada: ' + data.notFound.length + '</span>' : '') +
-        '</div>' +
-      '</div>';
-
-      if (data.notFound.length > 0) {
-        html += '<div class="lotus-pill rounded-xl px-4 py-3 mb-6 font-mono text-[12px] text-lotus-retur">' +
-          'Tidak ditemukan: ' + data.notFound.map(escapeHtml).join(', ') +
-        '</div>';
-      }
-
-      if (data.data.length === 0) {
-        html += '<div class="py-12 text-center">' +
-          '<p class="text-[14.5px] font-medium text-lotus-primary">Tidak ada data yang cocok</p>' +
-          '<p class="text-[12.5px] text-lotus-secondary mt-1">Coba ubah kata kunci pencarian atau rentang tanggal.</p>' +
-        '</div>';
-      } else {
-        // Cardless Editorial List separated by 1px Hairline Dividers
-        html += '<div>';
-        data.data.forEach(function (item, index) {
-          var meta = getStatusMeta(item.status);
-          var isOpen = !!expandedCards[item.resi];
-          var hargaFmt = 'Rp' + Number(item.harga || 0).toLocaleString('id-ID');
-          var resiTarget = item.resi || item.linkResi;
-          var safeResi = resiTarget.replace(/'/g, "\\'");
-          var safeLink = (item.linkResi || ('https://spx.co.id/track?' + item.resi)).replace(/'/g, "\\'");
-
-          if (index > 0) {
-            html += '<hr class="lotus-divider my-6" />';
-          }
-
-          html += '<article class="group">' +
-            // Top Metadata Row
-            '<div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">' +
-              '<div class="inline-flex items-center gap-2 flex-wrap">' +
-                '<span style="background-color:' + meta.dotColor + ';" class="w-1.5 h-1.5 rounded-full shrink-0"></span>' +
-                '<button type="button" onclick="copyTextToClipboard(\'' + safeResi + '\')" class="font-mono text-[14px] font-semibold text-lotus-primary hover:text-lotus-accent transition-colors cursor-pointer" title="Klik untuk salin resi">' +
-                  escapeHtml(item.resi) +
-                '</button>' +
-                '<span class="text-lotus-muted">&middot;</span>' +
-                '<span class="font-mono text-[11px] font-medium uppercase tracking-wider ' + meta.colorClass + '">' +
-                  escapeHtml(meta.label) +
-                '</span>' +
-              '</div>' +
-
-              '<div class="font-mono text-[12px] text-lotus-secondary">' +
-                escapeHtml(item.tanggal) +
-                (item.cs ? ' <span class="text-lotus-muted">&middot;</span> ' + escapeHtml(item.cs) : '') +
-              '</div>' +
-            '</div>' +
-
-            // Customer & Price Row
-            '<div class="flex flex-wrap items-baseline justify-between gap-2 mb-1">' +
-              '<p class="text-[14.5px] font-semibold text-lotus-primary">' +
-                escapeHtml(item.nama) +
-                (item.noHp ? ' <span class="font-mono text-[12.5px] font-normal text-lotus-secondary">&middot; ' + escapeHtml(item.noHp) + '</span>' : '') +
-              '</p>' +
-              '<span class="font-mono text-[13px] font-medium text-lotus-gold">' + hargaFmt + '</span>' +
-            '</div>' +
-
-            // Address & Product (Collapsible)
-            '<p class="text-[13px] text-lotus-secondary leading-relaxed ' + (isOpen ? '' : 'truncate') + '">' +
-              escapeHtml(item.produk) +
-              (item.alamat ? ' <span class="text-lotus-muted">&mdash;</span> ' + escapeHtml(item.alamat) : '') +
-            '</p>' +
-
-            // Action Links & Pills
-            '<div class="flex flex-wrap items-center justify-between gap-3 mt-3.5">' +
-              '<div class="flex items-center gap-2 flex-wrap">' +
-                (resiTarget
-                  ? '<button type="button" onclick="openLiveTrack(\'' + safeResi + '\', \'' + safeLink + '\')" class="lotus-pill inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[12px] font-semibold text-lotus-accent hover:text-lotus-primary cursor-pointer">' +
-                      '<span class="w-1.5 h-1.5 rounded-full radar-pulse-dot"></span>' +
-                      '<span>Lacak Paket</span>' +
-                    '</button>'
-                  : '') +
-                (item.noHp
-                  ? '<a href="' + waLink(item) + '" target="_blank" rel="noopener" class="lotus-pill inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[12px] font-medium text-lotus-delivered hover:opacity-90">' +
-                      '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.5 2 12.04 2zm5.8 14.16c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.13.11-1.82-.12-.42-.13-.96-.31-1.65-.6-2.9-1.25-4.79-4.17-4.94-4.36-.14-.2-1.18-1.57-1.18-3 0-1.42.75-2.12 1.01-2.41.27-.29.58-.36.78-.36.2 0 .39 0 .56.01.18.01.42-.07.65.5.24.58.82 2 .89 2.15.07.14.12.31.02.5-.09.19-.14.31-.28.48-.14.16-.29.36-.42.48-.14.14-.28.29-.12.57.16.28.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.22 1.37.28.14.44.12.6-.07.16-.19.68-.79.87-1.06.18-.28.37-.23.62-.14.25.09 1.6.76 1.87.9.28.14.46.21.53.32.07.12.07.68-.17 1.36z"/></svg>' +
-                      '<span>WhatsApp</span>' +
-                    '</a>'
-                  : '') +
-                '<button type="button" onclick="copyTextToClipboard(\'' + safeResi + '\')" class="text-[12px] font-medium text-lotus-secondary hover:text-lotus-primary px-2 py-1 transition-colors cursor-pointer">' +
-                  'Salin' +
-                '</button>' +
-              '</div>' +
-
-              '<button type="button" onclick="toggleCard(\'' + item.resi.replace(/'/g, "\\'") + '\')" class="inline-flex items-center gap-1 text-[11.5px] font-medium text-lotus-muted hover:text-lotus-primary transition-colors cursor-pointer">' +
-                '<span>' + (isOpen ? 'Ringkas' : 'Detail') + '</span>' +
-                '<svg class="w-3.5 h-3.5 transition-transform duration-150 ' + (isOpen ? 'rotate-180' : '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>' +
-              '</button>' +
-            '</div>' +
-          '</article>';
-        });
-        html += '</div>';
-      }
-
-      el.resultsArea.innerHTML = html;
-    }
-
-    /* ========================================================================
-       4. SLIDE-UP FROSTED SHEET — IN-APP LIVE TRACKING (TWILIGHT LOTUS STYLE)
-       ======================================================================== */
-    function extractCityName(locationStr) {
-      if (!locationStr) return '';
-      // Bersihkan akhiran seperti "DC", "Hub", "First Mile Hub", angka, dll.
-      var cleaned = locationStr
-        .replace(/\b(First Mile Hub|Last Mile Hub|Sorting Center|Gateway|Hub|DC)\b/gi, '')
-        .replace(/\d+/g, '')
-        .trim();
-      return cleaned || locationStr;
-    }
-
-    function openLiveTrack(resiOrUrl, fallbackLink) {
-      var cleanResi = resiOrUrl.indexOf('?') !== -1
-        ? resiOrUrl.split('?')[1].split('&')[0].trim()
-        : resiOrUrl.trim();
-
-      activeDrawerResi = cleanResi;
-      el.drawerResiCode.textContent = cleanResi;
-      el.drawerCopyLabel.textContent = 'Salin';
-      el.trackDrawerOverlay.classList.add('is-open');
-      el.trackDrawerOverlay.setAttribute('aria-hidden', 'false');
-
-      if (trackingCache[cleanResi]) {
-        renderDrawerTracking(trackingCache[cleanResi], fallbackLink);
-        return;
-      }
-
-      // Shimmer Loading Skeleton inside Drawer
-      el.drawerBody.innerHTML =
-        '<div class="space-y-5 py-2" aria-hidden="true">' +
-          '<div class="h-3.5 w-32 rounded-full shimmer-bar"></div>' +
-          '<div class="h-7 w-3/4 rounded-lg shimmer-bar"></div>' +
-          '<div class="h-3 w-1/2 rounded-full shimmer-bar"></div>' +
-          '<div class="pt-3 space-y-2.5">' +
-            '<div class="flex justify-between"><div class="h-4 w-20 rounded shimmer-bar"></div><div class="h-4 w-20 rounded shimmer-bar"></div></div>' +
-            '<div class="h-[2px] w-full rounded-full shimmer-bar"></div>' +
-          '</div>' +
-          '<hr class="lotus-divider my-6" />' +
-          '<div class="space-y-4">' +
-            '<div class="h-10 w-full rounded-lg shimmer-bar"></div>' +
-            '<div class="h-10 w-5/6 rounded-lg shimmer-bar"></div>' +
-            '<div class="h-10 w-4/6 rounded-lg shimmer-bar"></div>' +
-          '</div>' +
-        '</div>';
-
-      jsonpRequest({ token: ID_TOKEN, action: 'track', resi: cleanResi }, function (err, res) {
-        if (err || !res || !res.success) {
-          var msg = (err && err.message) || (res && res.error) || 'Data pelacakan SPX belum tersedia.';
-          el.drawerBody.innerHTML =
-            '<div class="py-10 text-center">' +
-              '<p class="text-[14px] font-medium text-lotus-retur mb-2">' + escapeHtml(msg) + '</p>' +
-              '<p class="text-[12.5px] text-lotus-secondary mb-5">Kamu tetap bisa mengeceknya langsung melalui situs resmi SPX.</p>' +
-              '<a href="' + escapeHtml(fallbackLink) + '" target="_blank" rel="noopener" class="lotus-cta-btn inline-flex items-center gap-1.5 text-[12.5px] font-bold px-5 py-2.5 rounded-full">' +
-                '<span>Buka spx.co.id</span>' +
-                '<span>&nearr;</span>' +
-              '</a>' +
-            '</div>';
-          return;
-        }
-
-        trackingCache[cleanResi] = res;
-        renderDrawerTracking(res, fallbackLink);
-      });
-    }
-
-    function renderDrawerTracking(data, fallbackLink) {
-      var riwayat = data.riwayat || [];
-      var isDelivered = (data.statusUtama || '').toLowerCase().indexOf('deliver') !== -1;
-      var latest = riwayat[0] || {};
-      var latestCode = latest.milestoneCode || 1;
-
-      // Hitung persentase perjalanan untuk progress beam 2px
-      var progressPct = 22;
-      if (isDelivered || latestCode >= 8) progressPct = 100;
-      else if (latestCode >= 6) progressPct = 88;
-      else if (latestCode >= 5) progressPct = 68;
-      else if (latestCode >= 4) progressPct = 42;
-
-      // Ekstrak kota asal (dari checkpoint terlama yang punya lokasi) & kota tujuan (dari checkpoint terbaru)
-      var originCity = 'Pengirim';
-      for (var i = riwayat.length - 1; i >= 0; i--) {
-        if (riwayat[i].lokasi) {
-          originCity = extractCityName(riwayat[i].lokasi);
-          break;
-        }
-      }
-      var destinationCity = latest.lokasi ? extractCityName(latest.lokasi) : 'Tujuan';
-
-      // Format timestamp pembaruan terakhir
-      var latestTimeStr = '';
-      if (latest.waktu) {
-        var dLatest = new Date(latest.waktu * 1000);
-        latestTimeStr = dLatest.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) +
-          ', ' + dLatest.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
-      }
-
-      var statusTagLabel = isDelivered ? 'Terkirim' : (data.statusUtama || 'Dalam Perjalanan');
-      var headlineText = latest.deskripsi || (isDelivered ? 'Paket telah diterima di alamat tujuan' : 'Paket sedang dalam proses pengiriman');
-
-      var html =
-        // Status State Tag
-        '<div class="mb-2 flex items-center justify-between gap-2">' +
-          '<div class="flex items-center gap-2">' +
-            '<span class="font-mono text-[11px] font-medium uppercase tracking-[0.12em] ' + (isDelivered ? 'text-lotus-delivered' : 'text-lotus-accent') + '">' +
-              escapeHtml(statusTagLabel) +
-            '</span>' +
-            (isDelivered ? '<span class="font-mono text-[11px] font-medium text-lotus-delivered">&bull; Selesai</span>' : '') +
-          '</div>' +
-          '<a href="' + escapeHtml(fallbackLink) + '" target="_blank" rel="noopener" class="font-mono text-[11px] text-lotus-secondary hover:text-lotus-primary underline underline-offset-4">' +
-            'spx.co.id &nearr;' +
-          '</a>' +
-        '</div>' +
-
-        // Editorial Status Headline
-        '<h3 class="editorial-heading text-[21px] sm:text-[23px] text-lotus-primary leading-[1.25] mb-2">' +
-          escapeHtml(headlineText) +
-        '</h3>' +
-
-        // Last Updated Meta
-        (latestTimeStr
-          ? '<p class="text-[12.5px] text-lotus-secondary mb-7">Pembaruan terakhir: <span class="font-mono text-[12px] text-lotus-primary">' + latestTimeStr + '</span></p>'
-          : '<div class="mb-6"></div>') +
-
-        // Borderless Route Progress Visualization (Asal -> Tujuan + Glowing Comet)
-        '<div>' +
-          '<div class="flex items-end justify-between gap-4 mb-2.5">' +
-            '<div>' +
-              '<span class="block font-mono text-[9.5px] uppercase tracking-[0.14em] text-lotus-muted mb-0.5">Asal</span>' +
-              '<p class="text-[15px] font-semibold text-lotus-primary leading-tight">' + escapeHtml(originCity) + '</p>' +
-            '</div>' +
-            '<div class="text-right">' +
-              '<span class="block font-mono text-[9.5px] uppercase tracking-[0.14em] text-lotus-muted mb-0.5">Tujuan</span>' +
-              '<p class="text-[15px] font-semibold text-lotus-primary leading-tight">' + escapeHtml(destinationCity) + '</p>' +
-            '</div>' +
-          '</div>' +
-
-          '<div class="route-track-bg relative w-full h-[2px] rounded-full my-2.5">' +
-            '<div style="width: ' + progressPct + '%;" class="route-progress-beam h-full rounded-full transition-all duration-700 ease-out"></div>' +
-            '<span style="left: ' + progressPct + '%;" class="route-comet-dot absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full"></span>' +
-          '</div>' +
-
-          '<div class="flex items-center justify-between gap-3 text-[11.5px] text-lotus-secondary mt-2">' +
-            '<span>' + (isDelivered ? 'Pengiriman selesai dengan bukti tanda terima' : 'Perjalanan paket terpantau real-time') + '</span>' +
-            '<span class="font-mono text-[11.5px] font-medium ' + (isDelivered ? 'text-lotus-delivered' : 'text-lotus-gold') + ' shrink-0">' + progressPct + '%</span>' +
-          '</div>' +
-        '</div>' +
-
-        '<hr class="lotus-divider my-8" />' +
-
-        // Vertical Checkpoint Timeline
-        '<div>' +
-          '<div class="flex items-center justify-between mb-6">' +
-            '<h4 class="font-mono text-[10.5px] font-medium uppercase tracking-[0.15em] text-lotus-secondary">RIWAYAT PERJALANAN</h4>' +
-            '<span class="font-mono text-[11px] text-lotus-muted">' + riwayat.length + ' pembaruan</span>' +
-          '</div>';
-
-      if (riwayat.length === 0) {
-        html += '<p class="text-[13px] text-lotus-secondary py-4">Belum ada riwayat perjalanan tercatat.</p>';
-      } else {
-        html += '<ol class="relative">';
-        riwayat.forEach(function (ev, idx) {
-          var isFirst = idx === 0;
-          var isLast = idx === riwayat.length - 1;
-          var dt = new Date(ev.waktu * 1000);
-          var waktuStr = dt.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }) +
-            ', ' + dt.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-
-          html +=
-            '<li class="relative flex gap-3.5">' +
-              '<div class="relative flex flex-col items-center w-4 shrink-0">' +
-                (!isLast ? '<span class="timeline-vertical-line absolute top-4 bottom-0 w-[1px]" aria-hidden="true"></span>' : '') +
-                '<div class="relative w-4 h-4 mt-1 flex items-center justify-center">' +
-                  (isFirst
-                    ? '<span class="timeline-active-node w-2.5 h-2.5 rounded-full"></span>'
-                    : '<span class="timeline-past-node w-1.5 h-1.5 rounded-full"></span>') +
-                '</div>' +
-              '</div>' +
-
-              '<div class="' + (isLast ? 'pb-0' : 'pb-6') + ' flex-1 min-w-0">' +
-                '<div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 mb-0.5">' +
-                  '<p class="text-[13.5px] leading-snug ' + (isFirst ? 'font-semibold text-lotus-primary' : 'font-medium text-lotus-primary opacity-85') + '">' +
-                    escapeHtml(ev.deskripsi) +
-                  '</p>' +
-                  '<time class="font-mono text-[11px] shrink-0 ' + (isFirst ? 'text-lotus-gold font-medium' : 'text-lotus-muted') + '">' +
-                    waktuStr +
-                  '</time>' +
-                '</div>' +
-                (ev.lokasi
-                  ? '<p class="text-[12px] text-lotus-secondary mt-0.5">' + escapeHtml(ev.lokasi) + '</p>'
-                  : '') +
-              '</div>' +
-            '</li>';
-        });
-        html += '</ol>';
-      }
-
-      html += '</div>';
-      el.drawerBody.innerHTML = html;
-    }
-
-    function closeTrackDrawer() {
-      el.trackDrawerOverlay.classList.remove('is-open');
-      el.trackDrawerOverlay.setAttribute('aria-hidden', 'true');
-    }
 
     el.closeDrawerBtn.addEventListener('click', closeTrackDrawer);
     el.drawerBackdrop.addEventListener('click', closeTrackDrawer);
@@ -1310,6 +1206,9 @@
       div.textContent = str == null ? '' : str;
       return div.innerHTML;
     }
+
+    // Initialize Preview
+    renderRows(SAMPLE_ORDERS);
   </script>
 </body>
 </html>
