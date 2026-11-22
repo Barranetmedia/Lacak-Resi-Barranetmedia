@@ -1156,22 +1156,32 @@
       });
     });
 
-    window.onload = function () {
-      renderEmptyState();
-      resetCornerActiveMonth(false);
-      if (typeof google === 'undefined') return;
-      google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: handleGoogleSignIn,
-        auto_select: true
-      });
-      google.accounts.id.renderButton(
-        document.getElementById('googleSignInBtn'),
-        { theme: 'outline', size: 'large', text: 'signin_with', shape: 'pill' }
-      );
-      google.accounts.id.prompt();
-    };
+    function initGoogleAuthButton(attempt) {
+  if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+    google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: handleGoogleSignIn,
+      auto_select: true
+    });
+    google.accounts.id.renderButton(
+      document.getElementById('googleSignInBtn'),
+      { theme: 'outline', size: 'large', text: 'signin_with', shape: 'pill' }
+    );
+    google.accounts.id.prompt();
+    return;
+  }
+  if (attempt < 20) {
+    setTimeout(function () { initGoogleAuthButton(attempt + 1); }, 300);
+  } else {
+    el.loginStatus.textContent = 'Gagal memuat layanan login Google. Matikan pemblokir iklan atau refresh halaman.';
+  }
+}
 
+window.onload = function () {
+  renderEmptyState();
+  resetCornerActiveMonth(false);
+  initGoogleAuthButton(0);
+};
     function jsonpRequest(params, callback) {
       var callbackName = 'jsonp_cb_' + Date.now() + '_' + Math.floor(Math.random() * 100000);
       window[callbackName] = function (data) {
