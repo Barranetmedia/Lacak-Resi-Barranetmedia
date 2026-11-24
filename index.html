@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>larba. — Cek Resi Barranetmedia</title>
+  <title>larba. — Lacak Resi Barranetmedia</title>
   <link rel="icon" type="image/png" href="favicon.png" />
 
   <!-- Google Identity Services -->
@@ -67,6 +67,7 @@
       --cta-shadow-hover: 0 10px 28px -4px rgba(183, 142, 245, 0.6);
 
       --route-gradient: linear-gradient(90deg, #7884E8 0%, #B78EF5 55%, #F6C856 100%);
+      --route-gradient-retur: linear-gradient(90deg, #F59E0B 0%, #FB7185 55%, #F43F5E 100%);
       --route-track: rgba(227, 186, 245, 0.14);
 
       --hairline: rgba(227, 186, 245, 0.11);
@@ -115,6 +116,7 @@
       --cta-shadow-hover: 0 10px 26px -4px rgba(140, 99, 223, 0.48);
 
       --route-gradient: linear-gradient(90deg, #5663D1 0%, #936CE8 55%, #D98A1C 100%);
+      --route-gradient-retur: linear-gradient(90deg, #F59E0B 0%, #F43F5E 55%, #BE123C 100%);
       --route-track: rgba(20, 16, 38, 0.09);
 
       --hairline: rgba(20, 16, 38, 0.08);
@@ -314,6 +316,16 @@
       box-shadow: 0 0 10px 2px var(--accent-gold-ring), 0 0 4px 1px var(--accent-gold);
     }
 
+    /* Varian RETUR (progress bar merah) */
+    .route-progress-beam-retur {
+      background: var(--route-gradient-retur);
+    }
+
+    .route-comet-dot-retur {
+      background-color: var(--accent-retur);
+      box-shadow: 0 0 10px 2px rgba(244, 63, 94, 0.42), 0 0 4px 1px var(--accent-retur);
+    }
+
     /* Vertical Timeline */
     .timeline-vertical-line {
       background: var(--timeline-line);
@@ -454,7 +466,7 @@
 
         <!-- Headline & Subtitle -->
         <h1 class="editorial-heading text-[28px] sm:text-[32px] text-lotus-primary mb-2">
-          Cek Resi Barranetmedia
+          Lacak Resi Barranetmedia
         </h1>
         <p class="text-[14px] leading-relaxed text-lotus-secondary mb-7">
           Selamat berjuang sukses...
@@ -661,17 +673,21 @@
 
   <script>
     /**
-     * larba. — Cek Resi Barranetmedia (Production Frontend connected to Google Sheets & SPX)
+     * larba. — Lacak Resi Barranetmedia (Production Frontend connected to Google Sheets & SPX)
      */
     var API_URL = "https://script.google.com/macros/s/AKfycbyZo8dEMfDcS84-WDwZiZeZS-WzdAwLOAyr_lU1TAovOZdW7PV0Qh338mhNJRDOKua1oA/exec";
     var GOOGLE_CLIENT_ID = "315770296664-pkethfkpdhd9bqj1lnjj0ec06eos8rlv.apps.googleusercontent.com";
 
     var ID_TOKEN = null;
+    var SESSION = null;
+    try { SESSION = localStorage.getItem('larba_session'); } catch (e) {}
+
     var expandedRows = {};
     var lastData = null;
     var trackingCache = {};
     var activeDrawerResi = "";
     var toastTimer = null;
+    var drawerOpen = false;
 
     var el = {
       brandResetBtn: document.getElementById('brandResetBtn'),
@@ -785,10 +801,40 @@
     }
 
     /* ========================================================================
-       2. GOOGLE OAUTH SIGN-IN & JSONP BACKEND CONNECTION
+       2. GOOGLE OAUTH SIGN-IN, SESI 30 HARI & JSONP BACKEND CONNECTION
        ======================================================================== */
+    function authParams() {
+      return SESSION ? { session: SESSION } : { token: ID_TOKEN };
+    }
+
+    function showApp() {
+      el.loginPanel.style.display = 'none';
+      el.searchPanel.style.display = '';
+      el.authBadgePill.classList.remove('hidden');
+      el.authBadgePill.classList.add('sm:inline-flex');
+    }
+
+    function logout() {
+      SESSION = null;
+      ID_TOKEN = null;
+      try { localStorage.removeItem('larba_session'); } catch (e) {}
+      el.searchPanel.style.display = 'none';
+      el.loginPanel.style.display = '';
+      el.authBadgePill.classList.add('hidden');
+      el.authBadgePill.classList.remove('sm:inline-flex');
+      if (drawerOpen) hideDrawer();
+    }
+
     window.onload = function () {
       renderEmptyState();
+
+      // Jika ada sesi tersimpan, cek ke server lalu langsung masuk tanpa login ulang
+      if (SESSION) {
+        jsonpRequest({ action: 'ping' }, function (err, data) {
+          if (!err && data && data.success) showApp();
+        });
+      }
+
       if (typeof google === 'undefined') return;
       google.accounts.id.initialize({
         client_id: GOOGLE_CLIENT_ID,
@@ -799,20 +845,26 @@
         document.getElementById('googleSignInBtn'),
         { theme: 'outline', size: 'large', text: 'signin_with', shape: 'pill' }
       );
-      google.accounts.id.prompt();
+      if (!SESSION) google.accounts.id.prompt();
     };
 
     function jsonpRequest(params, callback) {
+      params = Object.assign({}, params, authParams());
       var callbackName = 'jsonp_cb_' + Date.now() + '_' + Math.floor(Math.random() * 100000);
+      var script = document.createElement('script');
       window[callbackName] = function (data) {
         delete window[callbackName];
         if (script.parentNode) document.body.removeChild(script);
+        // Sesi habis / tidak valid -> kembali ke layar login
+        if (data && data.authError && params.action !== 'login') {
+          logout();
+          showToast('Sesi berakhir, silakan login ulang');
+        }
         callback(null, data);
       };
       var query = Object.keys(params).map(function (k) {
         return k + '=' + encodeURIComponent(params[k]);
       }).join('&');
-      var script = document.createElement('script');
       script.src = API_URL + '?' + query + '&callback=' + callbackName;
       script.onerror = function () {
         delete window[callbackName];
@@ -824,9 +876,10 @@
 
     function handleGoogleSignIn(response) {
       ID_TOKEN = response.credential;
+      SESSION = null;
       el.loginStatus.textContent = 'Memeriksa akses...';
 
-      jsonpRequest({ token: ID_TOKEN, q: '__cek_akses__' }, function (err, data) {
+      jsonpRequest({ action: 'login' }, function (err, data) {
         if (err) {
           el.loginStatus.textContent = 'Gagal terhubung: ' + err.message;
           return;
@@ -836,10 +889,11 @@
           ID_TOKEN = null;
           return;
         }
-        el.loginPanel.style.display = 'none';
-        el.searchPanel.style.display = '';
-        el.authBadgePill.classList.remove('hidden');
-        el.authBadgePill.classList.add('sm:inline-flex');
+        SESSION = data.session;
+        ID_TOKEN = null;
+        try { localStorage.setItem('larba_session', SESSION); } catch (e) {}
+        el.loginStatus.textContent = '';
+        showApp();
       });
     }
 
@@ -897,7 +951,6 @@
       el.searchShimmer.classList.remove('hidden');
 
       jsonpRequest({
-        token: ID_TOKEN,
         q: raw,
         cs: cs,
         status: status,
@@ -1057,6 +1110,12 @@
       el.trackDrawerOverlay.classList.add('is-open');
       el.trackDrawerOverlay.setAttribute('aria-hidden', 'false');
 
+      // Tambah entri riwayat agar tombol Back ponsel menutup pop-up (bukan menutup Chrome)
+      if (!drawerOpen) {
+        history.pushState({ drawer: true }, '');
+        drawerOpen = true;
+      }
+
       if (trackingCache[cleanResi]) {
         renderDrawerTracking(trackingCache[cleanResi], fallbackLink);
         return;
@@ -1079,7 +1138,7 @@
           '</div>' +
         '</div>';
 
-      jsonpRequest({ token: ID_TOKEN, action: 'track', resi: cleanResi }, function (err, res) {
+      jsonpRequest({ action: 'track', resi: cleanResi }, function (err, res) {
         if (err || !res || !res.success) {
           var msg = (err && err.message) || (res && res.error) || 'Data pelacakan SPX belum tersedia.';
           el.drawerBody.innerHTML =
@@ -1102,6 +1161,11 @@
     function renderDrawerTracking(data, fallbackLink) {
       var riwayat = data.riwayat || [];
       var isDelivered = (data.statusUtama || '').toLowerCase().indexOf('deliver') !== -1;
+      var isRetur = /retur|return/i.test(data.statusUtama || '') ||
+        riwayat.some(function (r) {
+          return /retur|return/i.test((r.deskripsi || '') + ' ' + (r.milestone || ''));
+        });
+      var accentCls = isRetur ? 'text-lotus-retur' : (isDelivered ? 'text-lotus-delivered' : 'text-lotus-accent');
       var latest = riwayat[0] || {};
       var latestCode = latest.milestoneCode || 1;
 
@@ -1127,16 +1191,16 @@
           ', ' + dLatest.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
       }
 
-      var statusTagLabel = isDelivered ? 'Terkirim' : (data.statusUtama || 'Dalam Perjalanan');
+      var statusTagLabel = isRetur ? 'Retur' : (isDelivered ? 'Terkirim' : (data.statusUtama || 'Dalam Perjalanan'));
       var headlineText = latest.deskripsi || (isDelivered ? 'Paket telah diterima di alamat tujuan' : 'Paket sedang dalam proses pengiriman');
 
       var html =
         '<div class="mb-2 flex items-center justify-between gap-2">' +
           '<div class="flex items-center gap-2">' +
-            '<span class="font-sans text-[11.5px] font-semibold uppercase tracking-wider ' + (isDelivered ? 'text-lotus-delivered' : 'text-lotus-accent') + '">' +
+            '<span class="font-sans text-[11.5px] font-semibold uppercase tracking-wider ' + accentCls + '">' +
               escapeHtml(statusTagLabel) +
             '</span>' +
-            (isDelivered ? '<span class="font-sans text-[11.5px] font-semibold text-lotus-delivered">&bull; Selesai</span>' : '') +
+            (isDelivered && !isRetur ? '<span class="font-sans text-[11.5px] font-semibold text-lotus-delivered">&bull; Selesai</span>' : '') +
           '</div>' +
           '<a href="' + escapeHtml(fallbackLink) + '" target="_blank" rel="noopener" class="font-sans text-[11.5px] text-lotus-secondary hover:text-lotus-primary underline underline-offset-4">' +
             'spx.co.id &nearr;' +
@@ -1164,13 +1228,13 @@
           '</div>' +
 
           '<div class="route-track-bg relative w-full h-[2px] rounded-full my-2.5">' +
-            '<div style="width:' + progressPct + '%;" class="route-progress-beam h-full rounded-full transition-all duration-700 ease-out"></div>' +
-            '<span style="left:' + progressPct + '%;" class="route-comet-dot absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full"></span>' +
+            '<div style="width:' + progressPct + '%;" class="' + (isRetur ? 'route-progress-beam-retur' : 'route-progress-beam') + ' h-full rounded-full transition-all duration-700 ease-out"></div>' +
+            '<span style="left:' + progressPct + '%;" class="' + (isRetur ? 'route-comet-dot-retur' : 'route-comet-dot') + ' absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full"></span>' +
           '</div>' +
 
           '<div class="flex items-center justify-between gap-3 text-[11.5px] text-lotus-secondary mt-2">' +
-            '<span>' + (isDelivered ? 'Pengiriman selesai dengan bukti tanda terima' : 'Perjalanan paket terpantau real-time') + '</span>' +
-            '<span class="font-sans text-[11.5px] font-semibold ' + (isDelivered ? 'text-lotus-delivered' : 'text-lotus-gold') + ' shrink-0">' + progressPct + '%</span>' +
+            '<span>' + (isRetur ? 'Paket dikembalikan ke pengirim' : (isDelivered ? 'Pengiriman selesai dengan bukti tanda terima' : 'Perjalanan paket terpantau real-time')) + '</span>' +
+            '<span class="font-sans text-[11.5px] font-semibold ' + (isRetur ? 'text-lotus-retur' : (isDelivered ? 'text-lotus-delivered' : 'text-lotus-gold')) + ' shrink-0">' + progressPct + '%</span>' +
           '</div>' +
         '</div>' +
 
@@ -1226,10 +1290,25 @@
       el.drawerBody.innerHTML = html;
     }
 
-    function closeTrackDrawer() {
+    /* Menutup pop-up: tombol Tutup / backdrop / Esc memanggil history.back(),
+       lalu popstate yang benar-benar menyembunyikan drawer (sama seperti tombol Back ponsel). */
+    function hideDrawer() {
+      drawerOpen = false;
       el.trackDrawerOverlay.classList.remove('is-open');
       el.trackDrawerOverlay.setAttribute('aria-hidden', 'true');
     }
+
+    function closeTrackDrawer() {
+      if (drawerOpen && history.state && history.state.drawer) {
+        history.back();
+      } else {
+        hideDrawer();
+      }
+    }
+
+    window.addEventListener('popstate', function () {
+      if (drawerOpen) hideDrawer();
+    });
 
     el.searchBtn.addEventListener('click', searchResi);
     el.todayOngoingBtn.addEventListener('click', function () {
